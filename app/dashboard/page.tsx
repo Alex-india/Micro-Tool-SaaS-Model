@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Clock, ShieldCheck, UserCheck, Sparkles, LogIn, ArrowRight } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { ALL_TOOLS } from "@/lib/constants";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function DashboardPage() {
   const { user, openAuthModal } = useAuth();
@@ -15,6 +16,10 @@ export default function DashboardPage() {
   if (!user) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-xl mx-auto gap-6">
+        <div className="w-full flex justify-start">
+          <BackButton fallbackHref="/tools" label="Back to Tools" variant="outline" size="sm" />
+        </div>
+
         <div className="w-16 h-16 rounded-2xl bg-surface-raised border border-border flex items-center justify-center text-accent shadow-md">
           <UserCheck className="w-8 h-8 text-accent" />
         </div>
@@ -60,6 +65,14 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6 py-6">
+      {/* Back Navigation Bar */}
+      <div className="flex items-center justify-between gap-4">
+        <BackButton fallbackHref="/tools" label="Back to Tools" variant="outline" size="sm" />
+        <span className="text-xs font-mono font-semibold text-text-tertiary">
+          Member Dashboard
+        </span>
+      </div>
+
       {/* Dashboard Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 bg-surface border border-border rounded-xl p-6 shadow-subtle">
         <div className="flex items-center gap-4">

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { SITE_NAME } from "@/lib/constants";
 import { AlertOctagon, RefreshCw, Home, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function ErrorPage({
   error,
@@ -43,6 +44,7 @@ export default function ErrorPage({
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        <BackButton fallbackHref="/tools" label="Go Back" variant="outline" size="md" />
         <Button
           variant="primary"
           size="md"

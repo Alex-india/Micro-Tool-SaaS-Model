@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/Badge";
 import { Search, Layers } from "lucide-react";
 import * as Icons from "lucide-react";
 
+import { BackButton } from "@/components/ui/BackButton";
+
 function ToolsDirectoryContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -72,6 +74,14 @@ function ToolsDirectoryContent() {
 
   return (
     <div className="flex flex-col gap-6 py-6">
+      {/* Back Navigation Bar */}
+      <div className="flex items-center justify-between gap-4">
+        <BackButton fallbackHref="/" label="Back to Home" variant="outline" size="sm" />
+        <span className="text-xs font-mono font-semibold text-text-tertiary">
+          {ALL_TOOLS.length} Total Tools Available
+        </span>
+      </div>
+
       {/* Directory Title Header */}
       <div className="flex flex-col gap-1.5">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">

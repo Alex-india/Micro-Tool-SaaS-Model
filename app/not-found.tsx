@@ -16,6 +16,7 @@ import {
   Image as ImageIcon 
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { BackButton } from "@/components/ui/BackButton";
 
 const POPULAR_SHORTCUTS = [
   { name: "SIP Calculator", path: "/tools/sip-calculator", icon: TrendingUp, cat: "Finance" },
@@ -102,7 +103,8 @@ export default function NotFound() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-4 pt-4">
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+        <BackButton fallbackHref="/tools" label="Go Back to Previous Page" variant="outline" size="md" />
         <Link href="/">
           <Button variant="primary" size="md" leftIcon={<Home className="w-4 h-4" />}>
             Return to Homepage

@@ -2,6 +2,7 @@ import React from "react";
 import { Metadata } from "next";
 import { SITE_NAME } from "@/lib/constants";
 import { Scale, CheckCircle2, AlertTriangle, ShieldCheck, FileCheck, HelpCircle } from "lucide-react";
+import { BackButton } from "@/components/ui/BackButton";
 
 export const metadata: Metadata = {
   title: `Terms & Conditions - ${SITE_NAME}`,
@@ -12,7 +13,15 @@ export default function TermsAndConditionsPage() {
   const effectiveDate = "September 8, 2026";
 
   return (
-    <div className="flex flex-col gap-10 py-8 max-w-4xl mx-auto w-full">
+    <div className="flex flex-col gap-8 py-6 max-w-4xl mx-auto w-full">
+      {/* Back Navigation */}
+      <div className="flex items-center justify-between gap-4">
+        <BackButton fallbackHref="/tools" label="Back to Tools" variant="outline" size="sm" />
+        <span className="text-xs font-mono font-semibold text-text-tertiary">
+          Terms & Conditions
+        </span>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col gap-3 border-b border-border pb-6">
         <div className="flex items-center gap-2 text-accent text-xs font-bold uppercase tracking-wider">

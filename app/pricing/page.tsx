@@ -24,6 +24,7 @@ import {
   ArrowRight
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { BackButton } from "@/components/ui/BackButton";
 
 export default function PricingPage() {
   const router = useRouter();
@@ -83,7 +84,15 @@ export default function PricingPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-12 py-8 max-w-6xl mx-auto px-4 sm:px-6">
+    <div className="flex flex-col gap-10 py-6 max-w-6xl mx-auto px-4 sm:px-6">
+      {/* Back Navigation */}
+      <div className="flex items-center justify-between gap-4">
+        <BackButton fallbackHref="/tools" label="Back to Tools" variant="outline" size="sm" />
+        <span className="text-xs font-mono font-semibold text-text-tertiary">
+          Plans & Pricing
+        </span>
+      </div>
+
       {/* Header Section */}
       <div className="text-center flex flex-col items-center gap-4 max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-xs sm:text-sm font-bold shadow-sm">

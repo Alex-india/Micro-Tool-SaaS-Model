@@ -15,6 +15,7 @@ import {
   ArrowRight,
   Globe2
 } from "lucide-react";
+import { BackButton } from "@/components/ui/BackButton";
 
 export const metadata: Metadata = {
   title: `About Us & Architecture - ${SITE_NAME}`,
@@ -23,7 +24,15 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col gap-12 py-8 max-w-5xl mx-auto w-full">
+    <div className="flex flex-col gap-10 py-6 max-w-5xl mx-auto w-full">
+      {/* Back Navigation */}
+      <div className="flex items-center justify-between gap-4">
+        <BackButton fallbackHref="/tools" label="Back to Tools" variant="outline" size="sm" />
+        <span className="text-xs font-mono font-semibold text-text-tertiary">
+          About ToolVerse
+        </span>
+      </div>
+
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center gap-4 border-b border-border pb-10">
         <span className="text-xs font-bold uppercase tracking-widest text-accent bg-accent/10 px-3.5 py-1.5 rounded-full flex items-center gap-1.5">
