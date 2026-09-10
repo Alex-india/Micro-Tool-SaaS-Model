@@ -1,0 +1,14 @@
+# ToolVerse Robots.txt
+# https://toolverse.app
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /_next/
+
+# Host
+Host: https://toolverse.app
+
+# Sitemap
+Sitemap: https://toolverse.app/sitemap.xml

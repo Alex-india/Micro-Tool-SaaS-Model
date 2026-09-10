@@ -1,0 +1,152 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* ElevenLabs Signature Typography: Waldenburg & Inter */
+
+@font-face {
+  font-family: 'Waldenburg';
+  src: local('Waldenburg Light'), local('Waldenburg-Light'), local('Waldenburg');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Waldenburg';
+  src: local('Waldenburg Regular'), local('Waldenburg-Regular'), local('Waldenburg');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Waldenburg';
+  src: local('Waldenburg Medium'), local('Waldenburg-Medium'), local('Waldenburg');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Waldenburg';
+  src: local('Waldenburg Bold'), local('Waldenburg-Bold'), local('Waldenburg');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Dark mode default tokens with high-contrast highlighted borders */
+  --background: #090a0f;
+  --surface: #11131a;
+  --surface-raised: #181b24;
+  --border: #353a4e;
+  --border-hover: #525b7a;
+
+  --text-primary: #ffffff;
+  --text-secondary: #c4c9d8;
+  --text-tertiary: #9299a9;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-muted: rgba(37, 99, 235, 0.15);
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #0ea5e9;
+
+  --card-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.45);
+  --card-shadow-hover: 0 8px 24px 0 rgba(0, 0, 0, 0.6);
+}
+
+.light {
+  /* Light mode tokens */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-raised: #f1f5f9;
+  --border: #94a3b8;
+  --border-hover: #64748b;
+
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-tertiary: #64748b;
+
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-muted: rgba(37, 99, 235, 0.1);
+
+  --card-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --card-shadow-hover: 0 6px 20px 0 rgba(0, 0, 0, 0.08);
+}
+
+html {
+  font-size: 17px;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans), 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  min-height: 100vh;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6, .font-heading, .font-display {
+  font-family: 'Waldenburg', var(--font-sans), 'Inter', sans-serif;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+p, label, span, button, input, select, textarea {
+  font-family: inherit;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Clean UI panels */
+.glass-panel {
+  background: rgba(18, 18, 21, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+.light .glass-panel {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Hide number spinner */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
