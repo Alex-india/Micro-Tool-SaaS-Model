@@ -446,7 +446,7 @@ export const CurrencyConverterView: React.FC<CurrencyConverterViewProps> = ({ to
             secondaryMetrics={[
               {
                 label: "Base Amount",
-                value: `${conversion.fromSymbol} ${amount.toLocaleString()} ${fromCurrency}`,
+                value: `${conversion.fromSymbol} ${(parseFloat(amount) || 0).toLocaleString()} ${fromCurrency}`,
               },
               {
                 label: "Live Market Rate",
@@ -507,7 +507,7 @@ export const CurrencyConverterView: React.FC<CurrencyConverterViewProps> = ({ to
           <div className="bg-surface border border-border rounded-xl p-5 shadow-card flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider">
-                {conversion.fromSymbol}{amount.toLocaleString()} {fromCurrency} in Other Currencies
+                {conversion.fromSymbol}{(parseFloat(amount) || 0).toLocaleString()} {fromCurrency} in Other Currencies
               </h4>
               <span className="text-[11px] font-mono text-accent">Live Rates</span>
             </div>

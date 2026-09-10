@@ -27,11 +27,13 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
   const isCommission = slug.includes("commission");
   const isPayroll = slug.includes("payroll");
   const isInventory = slug.includes("inventory") || slug.includes("reorder");
-  const isMargin = !isCAC && !isRunway && !isBreakEven && !isROAS && !isROI && !isMRR && !isCommission && !isPayroll && !isInventory;
+  const isMarkup = slug.includes("markup");
+  const isMargin = !isCAC && !isRunway && !isBreakEven && !isROAS && !isROI && !isMRR && !isCommission && !isPayroll && !isInventory && !isMarkup;
 
   // 1. Margin & Markup States
   const [costPrice, setCostPrice] = useState<string>("");
   const [sellingPrice, setSellingPrice] = useState<string>("");
+  const [markupPercent, setMarkupPercent] = useState<string>("");
 
   // 2. CAC & LTV States
   const [marketingSpend, setMarketingSpend] = useState<string>("");
@@ -57,6 +59,7 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
   // 6. ROI States
   const [initialInvestment, setInitialInvestment] = useState<string>("");
   const [finalValue, setFinalValue] = useState<string>("");
+  const [investmentYears, setInvestmentYears] = useState<number>(3);
 
   // 7. MRR / ARR States
   const [subscribers, setSubscribers] = useState<string>("");
@@ -85,6 +88,29 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
     const markup = cost > 0 ? (profit / cost) * 100 : 0;
     return { profit, margin: margin.toFixed(2), markup: markup.toFixed(2) };
   }, [costPrice, sellingPrice]);
+
+  const markupResult = useMemo(() => {
+    const cost = Math.max(0, parseFloat(costPrice) || 0);
+    const markup = Math.max(0, parseFloat(markupPercent) || 0);
+    const profit = (cost * markup) / 100;
+    const sell = cost + profit;
+    const margin = sell > 0 ? (profit / sell) * 100 : 0;
+
+    const batchBreakdown = [10, 50, 100, 500].map((units) => ({
+      units: `${units} Units`,
+      totalCost: formatCurrency(cost * units),
+      totalRevenue: formatCurrency(sell * units),
+      totalProfit: formatCurrency(profit * units),
+    }));
+
+    return {
+      sellingPrice: sell,
+      profit,
+      margin: margin.toFixed(2),
+      markup: markup.toFixed(2),
+      batchBreakdown,
+    };
+  }, [costPrice, markupPercent]);
 
   const cacResult = useMemo(() => {
     const spend = Math.max(0, parseFloat(marketingSpend) || 0);
@@ -147,12 +173,14 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
   }, [adSpend, adRevenue]);
 
   const roiResult = useMemo(() => {
-    const numInit = parseFloat(initialInvestment) || 0;
-    const numFinal = parseFloat(finalValue) || 0;
+    const numInit = Math.max(0, parseFloat(initialInvestment) || 0);
+    const numFinal = Math.max(0, parseFloat(finalValue) || 0);
     const gain = numFinal - numInit;
     const roi = numInit > 0 ? (gain / numInit) * 100 : 0;
-    return { roi: roi.toFixed(2), gain };
-  }, [initialInvestment, finalValue]);
+    const years = Math.max(1, investmentYears || 1);
+    const cagr = numInit > 0 && numFinal > 0 ? (Math.pow(numFinal / numInit, 1 / years) - 1) * 100 : 0;
+    return { roi: roi.toFixed(2), cagr: cagr.toFixed(2), gain, years };
+  }, [initialInvestment, finalValue, investmentYears]);
 
   const mrrResult = useMemo(() => {
     const numSubs = parseFloat(subscribers) || 0;
@@ -347,6 +375,14 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
                 prefixSymbol="₹"
                 placeholder="Enter final returns value (e.g. 175000)..."
               />
+              <Input
+                label="Holding Duration (Years)"
+                type="number"
+                value={investmentYears.toString()}
+                onChange={(e) => setInvestmentYears(Math.max(1, Number(e.target.value) || 1))}
+                placeholder="3"
+                helperText="Used to compute annualized CAGR return"
+              />
             </>
           ) : isMRR ? (
             <>
@@ -447,10 +483,32 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
                 placeholder="Enter safety stock reserve (e.g. 150)..."
               />
             </>
+          ) : isMarkup ? (
+            <>
+              <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider border-b border-border pb-2.5">
+                Markup Calculator Parameters
+              </h3>
+              <Input
+                label="Cost Price of Item (COGS)"
+                type="number"
+                value={costPrice}
+                onChange={(e) => setCostPrice(e.target.value)}
+                prefixSymbol="₹"
+                placeholder="Enter cost price (e.g. 400)..."
+              />
+              <Input
+                label="Target Markup Percentage (%)"
+                type="number"
+                value={markupPercent}
+                onChange={(e) => setMarkupPercent(e.target.value)}
+                suffixSymbol="%"
+                placeholder="Enter desired markup (e.g. 50)..."
+              />
+            </>
           ) : (
             <>
               <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider border-b border-border pb-2.5">
-                Profit Margin & Markup
+                Profit Margin & Markup Parameters
               </h3>
               <Input
                 label="Cost Price (COGS)"
@@ -461,7 +519,7 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
                 placeholder="Enter cost price (e.g. 500)..."
               />
               <Input
-                label="Selling Price"
+                label="Selling Price / Revenue"
                 type="number"
                 value={sellingPrice}
                 onChange={(e) => setSellingPrice(e.target.value)}
@@ -534,9 +592,9 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
               }}
               secondaryMetrics={[
                 { label: "Net Capital Gain", value: formatCurrency(roiResult.gain) },
+                { label: "Annualized Return (CAGR)", value: `${roiResult.cagr}% / yr` },
                 { label: "Initial Investment", value: formatCurrency(parseFloat(initialInvestment) || 0) },
                 { label: "Final Portfolio Value", value: formatCurrency(parseFloat(finalValue) || 0) },
-                { label: "Status", value: roiResult.gain >= 0 ? "Positive Gain" : "Net Loss" },
               ]}
             />
           ) : isMRR ? (
@@ -591,6 +649,36 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
                 { label: "Supplier Wait Time", value: `${leadTimeDays || 0} Days` },
               ]}
             />
+          ) : isMarkup ? (
+            <>
+              <ResultDisplay
+                primaryMetric={{
+                  label: "Recommended Selling Price",
+                  value: formatCurrency(markupResult.sellingPrice),
+                }}
+                secondaryMetrics={[
+                  { label: "Profit per Unit", value: formatCurrency(markupResult.profit) },
+                  { label: "Gross Margin", value: `${markupResult.margin}%` },
+                  { label: "Applied Markup", value: `${markupResult.markup}%` },
+                  { label: "Cost Price (COGS)", value: formatCurrency(parseFloat(costPrice) || 0) },
+                ]}
+              />
+
+              <div className="p-4 rounded-xl bg-surface border border-border shadow-card flex flex-col gap-3">
+                <h4 className="text-xs font-bold text-text-primary uppercase tracking-wider">
+                  Batch Order Revenue & Profit Table
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  {markupResult.batchBreakdown.map((b, i) => (
+                    <div key={i} className="p-2.5 rounded-lg bg-surface-raised border border-border flex flex-col gap-0.5">
+                      <span className="font-bold text-text-primary">{b.units}</span>
+                      <span className="text-[11px] text-text-tertiary">Rev: {b.totalRevenue}</span>
+                      <span className="text-[11px] font-mono font-bold text-emerald-400">Profit: {b.totalProfit}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
           ) : (
             <ResultDisplay
               primaryMetric={{
