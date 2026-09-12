@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "@/components/ui/Badge";
-import * as Icons from "lucide-react";
+import { ToolIcon } from "@/components/ui/ToolIcon";
 import { ToolMeta } from "@/lib/types";
 
 export interface ToolHeaderProps {
@@ -8,14 +8,12 @@ export interface ToolHeaderProps {
 }
 
 export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool }) => {
-  const IconComponent = (Icons as any)[tool.icon] || Icons.Wrench;
-
   return (
     <div className="flex flex-col gap-2.5 pb-5 border-b border-border mb-6">
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-surface-raised border border-border flex items-center justify-center text-accent">
-            <IconComponent className="w-5 h-5" />
+            <ToolIcon name={tool.icon} className="w-5 h-5" />
           </div>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight">
@@ -42,3 +40,4 @@ export const ToolHeader: React.FC<ToolHeaderProps> = ({ tool }) => {
     </div>
   );
 };
+

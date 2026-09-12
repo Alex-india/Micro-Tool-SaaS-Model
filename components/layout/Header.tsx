@@ -70,7 +70,7 @@ function HeaderNavLinks() {
   return (
     <nav className="hidden md:flex items-center gap-1.5 text-sm font-semibold">
       {/* 1. Directory */}
-      <Link href="/tools" className={getLinkClasses(isDirectoryActive)}>
+      <Link href="/tools" prefetch={false} className={getLinkClasses(isDirectoryActive)}>
         Directory
       </Link>
 
@@ -80,7 +80,7 @@ function HeaderNavLinks() {
         onMouseEnter={() => setActiveDropdown("finance")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <Link href="/tools?category=finance" className={getLinkClasses(isFinanceActive)}>
+        <Link href="/tools?category=finance" prefetch={false} className={getLinkClasses(isFinanceActive)}>
           <span>Finance</span>
           <ChevronDown className="w-3.5 h-3.5 opacity-60" />
         </Link>
@@ -92,7 +92,7 @@ function HeaderNavLinks() {
                 <span className="flex items-center gap-1.5">
                   <Calculator className="w-3.5 h-3.5 text-accent" /> Finance Tools
                 </span>
-                <Link href="/tools?category=finance" className="text-accent hover:underline">
+                <Link href="/tools?category=finance" prefetch={false} className="text-accent hover:underline">
                   View All (20) →
                 </Link>
               </div>
@@ -100,6 +100,7 @@ function HeaderNavLinks() {
                 <Link
                   key={t.path}
                   href={t.path}
+                  prefetch={false}
                   className="p-2 rounded-lg hover:bg-surface-raised flex flex-col gap-0.5 transition-colors group"
                 >
                   <span className="text-xs font-bold text-text-primary group-hover:text-accent transition-colors">
@@ -119,7 +120,7 @@ function HeaderNavLinks() {
         onMouseEnter={() => setActiveDropdown("developer")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <Link href="/tools?category=developer" className={getLinkClasses(isDeveloperActive)}>
+        <Link href="/tools?category=developer" prefetch={false} className={getLinkClasses(isDeveloperActive)}>
           <span>Developer</span>
           <ChevronDown className="w-3.5 h-3.5 opacity-60" />
         </Link>
@@ -131,7 +132,7 @@ function HeaderNavLinks() {
                 <span className="flex items-center gap-1.5">
                   <Code2 className="w-3.5 h-3.5 text-accent" /> Developer Tools
                 </span>
-                <Link href="/tools?category=developer" className="text-accent hover:underline">
+                <Link href="/tools?category=developer" prefetch={false} className="text-accent hover:underline">
                   View All (17) →
                 </Link>
               </div>
@@ -139,6 +140,7 @@ function HeaderNavLinks() {
                 <Link
                   key={t.path}
                   href={t.path}
+                  prefetch={false}
                   className="p-2 rounded-lg hover:bg-surface-raised flex flex-col gap-0.5 transition-colors group"
                 >
                   <span className="text-xs font-bold text-text-primary group-hover:text-accent transition-colors">
@@ -158,7 +160,7 @@ function HeaderNavLinks() {
         onMouseEnter={() => setActiveDropdown("pdf")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
-        <Link href="/tools?category=pdf" className={getLinkClasses(isPdfActive)}>
+        <Link href="/tools?category=pdf" prefetch={false} className={getLinkClasses(isPdfActive)}>
           <span>PDF & Files</span>
           <ChevronDown className="w-3.5 h-3.5 opacity-60" />
         </Link>
@@ -170,7 +172,7 @@ function HeaderNavLinks() {
                 <span className="flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-accent" /> PDF Utilities
                 </span>
-                <Link href="/tools?category=pdf" className="text-accent hover:underline">
+                <Link href="/tools?category=pdf" prefetch={false} className="text-accent hover:underline">
                   View All (18) →
                 </Link>
               </div>
@@ -178,6 +180,7 @@ function HeaderNavLinks() {
                 <Link
                   key={t.path}
                   href={t.path}
+                  prefetch={false}
                   className="p-2 rounded-lg hover:bg-surface-raised flex flex-col gap-0.5 transition-colors group"
                 >
                   <span className="text-xs font-bold text-text-primary group-hover:text-accent transition-colors">
@@ -192,12 +195,12 @@ function HeaderNavLinks() {
       </div>
 
       {/* 5. Pricing */}
-      <Link href="/pricing" className={getLinkClasses(isPricingActive)}>
+      <Link href="/pricing" prefetch={false} className={getLinkClasses(isPricingActive)}>
         Pricing
       </Link>
 
       {/* 6. About */}
-      <Link href="/about" className={getLinkClasses(isAboutActive)}>
+      <Link href="/about" prefetch={false} className={getLinkClasses(isAboutActive)}>
         About
       </Link>
     </nav>
@@ -381,6 +384,7 @@ export const Header: React.FC = () => {
           <nav className="flex flex-col gap-1.5 font-medium text-xs text-text-primary">
             <Link
               href="/tools"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
             >
@@ -389,6 +393,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/tools?category=finance"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
             >
@@ -397,6 +402,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/tools?category=developer"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
             >
@@ -405,6 +411,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/tools?category=pdf"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
             >
@@ -413,6 +420,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/pricing"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised"
             >
@@ -420,6 +428,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/about"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised"
             >
@@ -427,6 +436,7 @@ export const Header: React.FC = () => {
             </Link>
             <Link
               href="/dashboard"
+              prefetch={false}
               onClick={() => setMobileMenuOpen(false)}
               className="p-2.5 rounded-md hover:bg-surface-raised"
             >
@@ -434,7 +444,7 @@ export const Header: React.FC = () => {
             </Link>
           </nav>
           <div className="pt-3 border-t border-border">
-            <Link href="/pricing" onClick={() => setMobileMenuOpen(false)}>
+            <Link href="/pricing" prefetch={false} onClick={() => setMobileMenuOpen(false)}>
               <Button variant="primary" className="w-full" size="sm">
                 View Pro Plans
               </Button>

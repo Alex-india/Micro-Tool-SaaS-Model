@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPolicyPage() {
-  const lastUpdated = "September 8, 2026";
-
   return (
     <div className="flex flex-col gap-8 py-6 max-w-4xl mx-auto w-full">
       {/* Back Navigation */}
@@ -31,9 +29,6 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
           Privacy Policy
         </h1>
-        <p className="text-sm text-text-secondary">
-          Last Updated: <span className="font-mono text-text-primary">{lastUpdated}</span>
-        </p>
       </div>
 
       {/* Core Privacy Guarantee Banner */}

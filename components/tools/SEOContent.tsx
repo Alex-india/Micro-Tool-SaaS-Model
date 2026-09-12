@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ToolMeta } from "@/lib/types";
 import { 
   ChevronDown, 
@@ -22,17 +22,19 @@ export interface SEOContentProps {
   tool: ToolMeta;
 }
 
-export const SEOContent: React.FC<SEOContentProps> = ({ tool }) => {
+export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
 
-  const article = generateToolSEOArticle(tool);
-
-  const webAppSchema = generateWebApplicationSchema(tool);
-  const breadcrumbSchema = generateBreadcrumbSchema(tool);
-  const faqSchema = generateFAQSchema(article.faqs);
+  const article = useMemo(() => generateToolSEOArticle(tool), [tool.slug]);
+  const webAppSchema = useMemo(() => generateWebApplicationSchema(tool), [tool.slug]);
+  const breadcrumbSchema = useMemo(() => generateBreadcrumbSchema(tool), [tool.slug]);
+  const faqSchema = useMemo(() => generateFAQSchema(article.faqs), [article.faqs]);
 
   return (
-    <article className="mt-16 pt-12 border-t border-border flex flex-col gap-12 max-w-5xl mx-auto w-full">
+    <article
+      className="mt-16 pt-12 border-t border-border flex flex-col gap-12 max-w-5xl mx-auto w-full"
+      style={{ contentVisibility: "auto", containIntrinsicSize: "900px" }}
+    >
       {/* JSON-LD Schema Script Injections */}
       <script
         type="application/ld+json"
@@ -282,4 +284,8 @@ export const SEOContent: React.FC<SEOContentProps> = ({ tool }) => {
       </section>
     </article>
   );
-};
+});
+
+SEOContent.displayName = "SEOContent";
+
+export default SEOContent;

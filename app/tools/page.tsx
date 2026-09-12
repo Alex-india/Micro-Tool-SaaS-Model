@@ -8,7 +8,7 @@ import { ToolMeta } from "@/lib/types";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Search, Layers } from "lucide-react";
-import * as Icons from "lucide-react";
+import { ToolIcon } from "@/components/ui/ToolIcon";
 
 import { BackButton } from "@/components/ui/BackButton";
 
@@ -117,7 +117,6 @@ function ToolsDirectoryContent() {
 
           {CATEGORIES.map((cat) => {
             const count = ALL_TOOLS.filter((t) => t.category === cat.slug).length;
-            const IconComp = (Icons as any)[cat.icon] || Icons.Wrench;
             const isSelected = selectedCategory === cat.slug;
 
             return (
@@ -131,7 +130,7 @@ function ToolsDirectoryContent() {
                 }`}
               >
                 <span className="flex items-center gap-2.5 truncate">
-                  <IconComp className="w-4 h-4 shrink-0" />
+                  <ToolIcon name={cat.icon} className="w-4 h-4 shrink-0" />
                   <span className="truncate">{cat.name}</span>
                 </span>
                 <span className="font-mono text-xs opacity-90 ml-2 shrink-0">{count}</span>
@@ -229,14 +228,13 @@ function ToolsDirectoryContent() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredTools.map((tool) => {
-                const IconComp = (Icons as any)[tool.icon] || Icons.Wrench;
                 return (
-                  <Link key={tool.slug} href={tool.path}>
+                  <Link key={tool.slug} href={tool.path} prefetch={false}>
                     <Card variant="interactive" className="h-full flex flex-col justify-between p-5">
                       <div className="flex flex-col gap-3">
                         <div className="flex items-center justify-between">
                           <div className="w-9 h-9 rounded-lg bg-surface-raised border border-border flex items-center justify-center text-accent">
-                            <IconComp className="w-4.5 h-4.5" />
+                            <ToolIcon name={tool.icon} className="w-4.5 h-4.5" />
                           </div>
                           <div className="flex items-center gap-1.5">
                             {tool.isPopular && <Badge variant="popular">Popular</Badge>}

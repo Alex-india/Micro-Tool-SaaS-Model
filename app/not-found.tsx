@@ -19,14 +19,14 @@ import { Button } from "@/components/ui/Button";
 import { BackButton } from "@/components/ui/BackButton";
 
 const POPULAR_SHORTCUTS = [
-  { name: "SIP Calculator", path: "/tools/sip-calculator", icon: TrendingUp, cat: "Finance" },
-  { name: "EMI Calculator", path: "/tools/emi-calculator", icon: Calculator, cat: "Finance" },
-  { name: "GST Calculator", path: "/tools/gst-calculator", icon: Calculator, cat: "Finance" },
-  { name: "Income Tax Calculator", path: "/tools/income-tax-calculator", icon: TrendingUp, cat: "Finance" },
-  { name: "JSON Formatter", path: "/tools/json-formatter", icon: Code, cat: "Developer" },
-  { name: "Password Generator", path: "/tools/password-generator", icon: Compass, cat: "Privacy" },
-  { name: "Image Resizer", path: "/tools/image-resizer", icon: ImageIcon, cat: "Image" },
-  { name: "PDF Merger", path: "/tools/pdf-merge", icon: FileText, cat: "PDF" },
+  { name: "SIP Calculator", path: "/finance/sip-calculator", icon: TrendingUp, cat: "Finance" },
+  { name: "EMI Calculator", path: "/finance/emi-calculator", icon: Calculator, cat: "Finance" },
+  { name: "GST Calculator", path: "/finance/gst-calculator", icon: Calculator, cat: "Finance" },
+  { name: "Income Tax Calculator", path: "/finance/income-tax-calculator", icon: TrendingUp, cat: "Finance" },
+  { name: "JSON Formatter", path: "/developer/json-formatter", icon: Code, cat: "Developer" },
+  { name: "Password Generator", path: "/privacy/password-generator", icon: Compass, cat: "Privacy" },
+  { name: "Image Resizer", path: "/image/image-resizer", icon: ImageIcon, cat: "Image" },
+  { name: "Merge PDF", path: "/pdf/merge-pdf", icon: FileText, cat: "PDF" },
 ];
 
 export default function NotFound() {
@@ -91,6 +91,7 @@ export default function NotFound() {
               <Link
                 key={item.path}
                 href={item.path}
+                prefetch={false}
                 className="p-3 bg-surface hover:bg-surface-raised border border-border hover:border-accent/40 rounded-xl flex flex-col items-center gap-1.5 transition-all text-xs group shadow-subtle"
               >
                 <Icon className="w-4 h-4 text-accent group-hover:scale-110 transition-transform" />
@@ -105,12 +106,12 @@ export default function NotFound() {
       {/* Actions */}
       <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
         <BackButton fallbackHref="/tools" label="Go Back to Previous Page" variant="outline" size="md" />
-        <Link href="/">
+        <Link href="/" prefetch={false}>
           <Button variant="primary" size="md" leftIcon={<Home className="w-4 h-4" />}>
             Return to Homepage
           </Button>
         </Link>
-        <Link href="/tools">
+        <Link href="/tools" prefetch={false}>
           <Button variant="secondary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
             Browse All Tools
           </Button>

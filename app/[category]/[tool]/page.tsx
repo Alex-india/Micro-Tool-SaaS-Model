@@ -5,30 +5,111 @@ import { ALL_TOOLS } from "@/lib/constants";
 import { getToolBySlug } from "@/lib/utils";
 import { Breadcrumb } from "@/components/layout/Breadcrumb";
 
-// View components
-import { SIPCalculatorView } from "@/components/tools/views/SIPCalculatorView";
-import { EMICalculatorView } from "@/components/tools/views/EMICalculatorView";
-import { GSTCalculatorView } from "@/components/tools/views/GSTCalculatorView";
-import { InvestmentCalculatorView } from "@/components/tools/views/InvestmentCalculatorView";
-import { TaxAndSalaryCalculatorView } from "@/components/tools/views/TaxAndSalaryCalculatorView";
-import { CurrencyConverterView } from "@/components/tools/views/CurrencyConverterView";
-import { JSONFormatterView } from "@/components/tools/views/JSONFormatterView";
-import { JWTDecoderView } from "@/components/tools/views/JWTDecoderView";
-import { WordCounterView } from "@/components/tools/views/WordCounterView";
-import { PasswordGeneratorView } from "@/components/tools/views/PasswordGeneratorView";
-import { QRCodeGeneratorView } from "@/components/tools/views/QRCodeGeneratorView";
-import { InvoiceGeneratorView } from "@/components/tools/views/InvoiceGeneratorView";
-import { CSVToJSONView } from "@/components/tools/views/CSVToJSONView";
-import { ImageStudioView } from "@/components/tools/views/ImageStudioView";
-import { PDFStudioView } from "@/components/tools/views/PDFStudioView";
-import { DeveloperStudioView } from "@/components/tools/views/DeveloperStudioView";
-import { TextStudioView } from "@/components/tools/views/TextStudioView";
-import { EverydayCalculatorView } from "@/components/tools/views/EverydayCalculatorView";
-import { SocialMediaStudioView } from "@/components/tools/views/SocialMediaStudioView";
-import { VideoAudioStudioView } from "@/components/tools/views/VideoAudioStudioView";
-import { WebSEOStudioView } from "@/components/tools/views/WebSEOStudioView";
-import { StudentStudioView } from "@/components/tools/views/StudentStudioView";
-import { BusinessCalculatorView } from "@/components/tools/views/BusinessCalculatorView";
+import dynamic from "next/dynamic";
+
+const ToolSkeleton = () => (
+  <div className="w-full flex flex-col gap-6 animate-pulse py-4">
+    <div className="h-24 bg-surface border border-border rounded-xl w-full" />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="lg:col-span-5 h-[420px] bg-surface border border-border rounded-xl" />
+      <div className="lg:col-span-7 h-[420px] bg-surface border border-border rounded-xl" />
+    </div>
+  </div>
+);
+
+// Code-split dynamic views
+const SIPCalculatorView = dynamic(
+  () => import("@/components/tools/views/SIPCalculatorView").then((m) => m.SIPCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const EMICalculatorView = dynamic(
+  () => import("@/components/tools/views/EMICalculatorView").then((m) => m.EMICalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const GSTCalculatorView = dynamic(
+  () => import("@/components/tools/views/GSTCalculatorView").then((m) => m.GSTCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const InvestmentCalculatorView = dynamic(
+  () => import("@/components/tools/views/InvestmentCalculatorView").then((m) => m.InvestmentCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const TaxAndSalaryCalculatorView = dynamic(
+  () => import("@/components/tools/views/TaxAndSalaryCalculatorView").then((m) => m.TaxAndSalaryCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const CurrencyConverterView = dynamic(
+  () => import("@/components/tools/views/CurrencyConverterView").then((m) => m.CurrencyConverterView),
+  { loading: () => <ToolSkeleton /> }
+);
+const JSONFormatterView = dynamic(
+  () => import("@/components/tools/views/JSONFormatterView").then((m) => m.JSONFormatterView),
+  { loading: () => <ToolSkeleton /> }
+);
+const JWTDecoderView = dynamic(
+  () => import("@/components/tools/views/JWTDecoderView").then((m) => m.JWTDecoderView),
+  { loading: () => <ToolSkeleton /> }
+);
+const WordCounterView = dynamic(
+  () => import("@/components/tools/views/WordCounterView").then((m) => m.WordCounterView),
+  { loading: () => <ToolSkeleton /> }
+);
+const PasswordGeneratorView = dynamic(
+  () => import("@/components/tools/views/PasswordGeneratorView").then((m) => m.PasswordGeneratorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const QRCodeGeneratorView = dynamic(
+  () => import("@/components/tools/views/QRCodeGeneratorView").then((m) => m.QRCodeGeneratorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const InvoiceGeneratorView = dynamic(
+  () => import("@/components/tools/views/InvoiceGeneratorView").then((m) => m.InvoiceGeneratorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const CSVToJSONView = dynamic(
+  () => import("@/components/tools/views/CSVToJSONView").then((m) => m.CSVToJSONView),
+  { loading: () => <ToolSkeleton /> }
+);
+const ImageStudioView = dynamic(
+  () => import("@/components/tools/views/ImageStudioView").then((m) => m.ImageStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const PDFStudioView = dynamic(
+  () => import("@/components/tools/views/PDFStudioView").then((m) => m.PDFStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const DeveloperStudioView = dynamic(
+  () => import("@/components/tools/views/DeveloperStudioView").then((m) => m.DeveloperStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const TextStudioView = dynamic(
+  () => import("@/components/tools/views/TextStudioView").then((m) => m.TextStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const EverydayCalculatorView = dynamic(
+  () => import("@/components/tools/views/EverydayCalculatorView").then((m) => m.EverydayCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
+const SocialMediaStudioView = dynamic(
+  () => import("@/components/tools/views/SocialMediaStudioView").then((m) => m.SocialMediaStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const VideoAudioStudioView = dynamic(
+  () => import("@/components/tools/views/VideoAudioStudioView").then((m) => m.VideoAudioStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const WebSEOStudioView = dynamic(
+  () => import("@/components/tools/views/WebSEOStudioView").then((m) => m.WebSEOStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const StudentStudioView = dynamic(
+  () => import("@/components/tools/views/StudentStudioView").then((m) => m.StudentStudioView),
+  { loading: () => <ToolSkeleton /> }
+);
+const BusinessCalculatorView = dynamic(
+  () => import("@/components/tools/views/BusinessCalculatorView").then((m) => m.BusinessCalculatorView),
+  { loading: () => <ToolSkeleton /> }
+);
 
 interface PageProps {
   params: {

@@ -14,14 +14,8 @@ import {
   Zap,
   Lock,
   Download,
-  Calculator,
-  Code,
-  FileText,
-  KeyRound,
-  QrCode,
-  FileSpreadsheet,
 } from "lucide-react";
-import * as Icons from "lucide-react";
+import { ToolIcon } from "@/components/ui/ToolIcon";
 
 export default function HomePage() {
   const router = useRouter();
@@ -112,6 +106,7 @@ export default function HomePage() {
                 <Link
                   key={tool.slug}
                   href={tool.path}
+                  prefetch={false}
                   className="flex items-center justify-between p-3.5 hover:bg-surface-raised border-b border-border/50 last:border-0 transition-colors"
                 >
                   <div className="flex flex-col">
@@ -130,30 +125,35 @@ export default function HomePage() {
           <span className="text-text-tertiary text-xs font-bold uppercase tracking-wider">Popular:</span>
           <Link
             href="/tools?category=finance"
+            prefetch={false}
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
           >
             Finance
           </Link>
           <Link
             href="/tools?category=developer"
+            prefetch={false}
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
           >
             Developer
           </Link>
           <Link
             href="/tools?category=pdf"
+            prefetch={false}
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
           >
             PDF & Documents
           </Link>
           <Link
             href="/tools?category=text"
+            prefetch={false}
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
           >
             Text Tools
           </Link>
           <Link
             href="/tools?category=privacy"
+            prefetch={false}
             className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
           >
             Privacy
@@ -168,21 +168,20 @@ export default function HomePage() {
             <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary">Featured Utilities</h2>
             <p className="text-xs sm:text-sm font-medium text-text-secondary mt-0.5">Essential everyday tools used by finance professionals, developers, and writers</p>
           </div>
-          <Link href="/tools" className="text-xs sm:text-sm font-bold text-accent hover:underline">
+          <Link href="/tools" prefetch={false} className="text-xs sm:text-sm font-bold text-accent hover:underline">
             View All {ALL_TOOLS.length} Tools →
           </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {popularTools.map((tool) => {
-            const IconComp = (Icons as any)[tool.icon] || Icons.Wrench;
             return (
-              <Link key={tool.slug} href={tool.path}>
+              <Link key={tool.slug} href={tool.path} prefetch={false}>
                 <Card variant="interactive" className="h-full flex flex-col justify-between p-5">
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <div className="w-9 h-9 rounded-lg bg-surface-raised border border-border flex items-center justify-center text-accent">
-                        <IconComp className="w-4.5 h-4.5" />
+                        <ToolIcon name={tool.icon} className="w-4.5 h-4.5" />
                       </div>
                       <Badge variant={tool.plan === "free" ? "free" : "premium"}>{tool.plan}</Badge>
                     </div>
@@ -210,23 +209,22 @@ export default function HomePage() {
             <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary">Explore by Category</h2>
             <p className="text-xs sm:text-sm font-medium text-text-secondary mt-0.5">Browse tools organized across 13 specialized domains</p>
           </div>
-          <Link href="/tools" className="text-xs sm:text-sm font-bold text-accent hover:underline">
+          <Link href="/tools" prefetch={false} className="text-xs sm:text-sm font-bold text-accent hover:underline">
             Directory Index →
           </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {CATEGORIES.map((cat) => {
-            const IconComponent = (Icons as any)[cat.icon] || Icons.Wrench;
             const count = ALL_TOOLS.filter((t) => t.category === cat.slug).length;
 
             return (
-              <Link key={cat.slug} href={`/tools?category=${cat.slug}`}>
+              <Link key={cat.slug} href={`/tools?category=${cat.slug}`} prefetch={false}>
                 <Card variant="interactive" className="h-full flex flex-col justify-between p-5">
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center justify-between">
                       <div className="w-9 h-9 rounded-lg bg-surface-raised border border-border flex items-center justify-center text-text-primary">
-                        <IconComponent className="w-4.5 h-4.5" />
+                        <ToolIcon name={cat.icon} className="w-4.5 h-4.5" />
                       </div>
                       <span className="text-xs font-mono font-bold text-text-tertiary">{count} tools</span>
                     </div>

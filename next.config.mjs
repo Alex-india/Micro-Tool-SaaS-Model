@@ -2,8 +2,13 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
   images: {
     unoptimized: true,
+  },
+  experimental: {
+    optimizePackageImports: ["lucide-react", "recharts", "pdf-lib", "jszip"],
   },
   webpack: (config) => {
     config.resolve.alias = {
@@ -20,3 +25,4 @@ const nextConfig = {
 };
 
 export default nextConfig;
+

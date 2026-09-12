@@ -657,3 +657,23 @@ function escapeXml(unsafe: string): string {
     }
   });
 }
+
+/**
+ * Gets the total number of pages in a PDF document buffer
+ */
+export async function getPdfPageCount(pdfBytes: ArrayBuffer): Promise<number> {
+  const pdf = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+  return pdf.getPageCount();
+}
+
+/**
+ * Loads a PDF buffer, updates title if provided, and saves clean bytes
+ */
+export async function cleanSavePdfDocument(pdfBytes: ArrayBuffer, title?: string): Promise<Uint8Array> {
+  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
+  if (title) {
+    pdfDoc.setTitle(title);
+  }
+  return pdfDoc.save();
+}
+

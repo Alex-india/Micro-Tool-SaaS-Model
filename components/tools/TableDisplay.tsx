@@ -18,7 +18,7 @@ export interface TableDisplayProps {
   pageSize?: number;
 }
 
-export const TableDisplay: React.FC<TableDisplayProps> = ({
+export const TableDisplay = React.memo<TableDisplayProps>(({
   title,
   columns,
   data,
@@ -127,4 +127,8 @@ export const TableDisplay: React.FC<TableDisplayProps> = ({
       )}
     </div>
   );
-};
+});
+
+TableDisplay.displayName = "TableDisplay";
+
+export default TableDisplay;

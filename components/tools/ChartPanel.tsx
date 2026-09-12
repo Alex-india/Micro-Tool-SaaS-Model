@@ -29,7 +29,7 @@ export interface ChartPanelProps {
   }>;
 }
 
-export const ChartPanel: React.FC<ChartPanelProps> = ({
+export const ChartPanel = React.memo<ChartPanelProps>(({
   title,
   type,
   data,
@@ -133,4 +133,8 @@ export const ChartPanel: React.FC<ChartPanelProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ChartPanel.displayName = "ChartPanel";
+
+export default ChartPanel;

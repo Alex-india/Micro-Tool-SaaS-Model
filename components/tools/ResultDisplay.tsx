@@ -18,7 +18,7 @@ export interface ResultDisplayProps {
   onCopyResult?: () => void;
 }
 
-export const ResultDisplay: React.FC<ResultDisplayProps> = ({
+export const ResultDisplay = React.memo<ResultDisplayProps>(({
   primaryMetric,
   secondaryMetrics = [],
   onDownloadPDF,
@@ -111,4 +111,8 @@ export const ResultDisplay: React.FC<ResultDisplayProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ResultDisplay.displayName = "ResultDisplay";
+
+export default ResultDisplay;

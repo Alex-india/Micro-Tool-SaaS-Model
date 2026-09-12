@@ -40,18 +40,40 @@ export function formatBytes(bytes: number, decimals: number = 2): string {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
 }
 
+// Pre-indexed Map for O(1) lookups
+const toolSlugMap = new Map<string, ToolMeta>();
+const categorySlugMap = new Map<string, CategoryMeta>();
+const categoryToolsMap = new Map<ToolCategory, ToolMeta[]>();
+
+ALL_TOOLS.forEach((t) => {
+  toolSlugMap.set(t.slug, t);
+  const list = categoryToolsMap.get(t.category) || [];
+  list.push(t);
+  categoryToolsMap.set(t.category, list);
+});
+
+CATEGORIES.forEach((c) => {
+  categorySlugMap.set(c.slug, c);
+});
+
 export function getToolBySlug(slug: string): ToolMeta | undefined {
-  return ALL_TOOLS.find((t) => t.slug === slug);
+  return toolSlugMap.get(slug);
 }
 
 export function getCategoryBySlug(slug: string): CategoryMeta | undefined {
-  return CATEGORIES.find((c) => c.slug === slug as ToolCategory);
+  return categorySlugMap.get(slug);
 }
 
 export function getRelatedTools(slugs: string[]): ToolMeta[] {
-  return ALL_TOOLS.filter((t) => slugs.includes(t.slug));
+  const result: ToolMeta[] = [];
+  for (const s of slugs) {
+    const t = toolSlugMap.get(s);
+    if (t) result.push(t);
+  }
+  return result;
 }
 
 export function getToolsByCategory(category: ToolCategory): ToolMeta[] {
-  return ALL_TOOLS.filter((t) => t.category === category);
+  return categoryToolsMap.get(category) || [];
 }
+

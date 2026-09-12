@@ -48,8 +48,9 @@ import {
   generateDocxFromText,
   generatePptxFromSlides,
   convertTextOrDocToPdf,
+  getPdfPageCount,
+  cleanSavePdfDocument,
 } from "@/lib/pdf-engine";
-import { PDFDocument } from "pdf-lib";
 
 export interface PDFStudioViewProps {
   tool: ToolMeta;
@@ -161,8 +162,7 @@ export const PDFStudioView: React.FC<PDFStudioViewProps> = ({ tool }) => {
     if (targetFile.type.includes("pdf") || targetFile.name.toLowerCase().endsWith(".pdf")) {
       try {
         const buffer = await targetFile.arrayBuffer();
-        const pdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
-        const count = pdf.getPageCount();
+        const count = await getPdfPageCount(buffer);
         setPageCount(count);
 
         const initialOrder = Array.from({ length: count }, (_, i) => i);
@@ -252,8 +252,7 @@ export const PDFStudioView: React.FC<PDFStudioViewProps> = ({ tool }) => {
         // 2. SPLIT PDF
         const buffer = await files[0].arrayBuffer();
         if (splitMode === "all_zip") {
-          const sourcePdf = await PDFDocument.load(buffer, { ignoreEncryption: true });
-          const total = sourcePdf.getPageCount();
+          const total = await getPdfPageCount(buffer);
           const zipFiles: { filename: string; data: Uint8Array }[] = [];
 
           for (let i = 0; i < total; i++) {
@@ -419,9 +418,7 @@ export const PDFStudioView: React.FC<PDFStudioViewProps> = ({ tool }) => {
       } else if (isProtect || isUnlock) {
         // 14. PASSWORD PROTECT / UNLOCK
         const buffer = await files[0].arrayBuffer();
-        const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true });
-        pdfDoc.setTitle(docTitleInput || tool.name);
-        const savedBytes = await pdfDoc.save();
+        const savedBytes = await cleanSavePdfDocument(buffer, docTitleInput || tool.name);
         const blob = new Blob([savedBytes as any], { type: "application/pdf" });
         setResultBlob(blob);
         setResultUrl(URL.createObjectURL(blob));
@@ -434,8 +431,7 @@ export const PDFStudioView: React.FC<PDFStudioViewProps> = ({ tool }) => {
       } else {
         // 15. DEFAULT PDF OPTIMIZE
         const buffer = await files[0].arrayBuffer();
-        const pdfDoc = await PDFDocument.load(buffer, { ignoreEncryption: true });
-        const savedBytes = await pdfDoc.save();
+        const savedBytes = await cleanSavePdfDocument(buffer);
         const blob = new Blob([savedBytes as any], { type: "application/pdf" });
         setResultBlob(blob);
         setResultUrl(URL.createObjectURL(blob));

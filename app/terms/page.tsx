@@ -10,8 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function TermsAndConditionsPage() {
-  const effectiveDate = "September 8, 2026";
-
   return (
     <div className="flex flex-col gap-8 py-6 max-w-4xl mx-auto w-full">
       {/* Back Navigation */}
@@ -31,9 +29,6 @@ export default function TermsAndConditionsPage() {
         <h1 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
           Terms & Conditions
         </h1>
-        <p className="text-sm text-text-secondary">
-          Effective Date: <span className="font-mono text-text-primary">{effectiveDate}</span>
-        </p>
       </div>
 
       {/* Summary Box */}

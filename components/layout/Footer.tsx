@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
             <ul className="flex flex-col gap-1.5 text-xs text-text-secondary">
               {CATEGORIES.slice(0, 5).map((cat) => (
                 <li key={cat.slug}>
-                  <Link href={`/tools?category=${cat.slug}`} className="hover:text-text-primary transition-colors">
+                  <Link href={`/tools?category=${cat.slug}`} prefetch={false} className="hover:text-text-primary transition-colors">
                     {cat.name}
                   </Link>
                 </li>
@@ -53,7 +53,7 @@ export const Footer: React.FC = () => {
             <ul className="flex flex-col gap-1.5 text-xs text-text-secondary">
               {CATEGORIES.slice(5, 10).map((cat) => (
                 <li key={cat.slug}>
-                  <Link href={`/tools?category=${cat.slug}`} className="hover:text-text-primary transition-colors">
+                  <Link href={`/tools?category=${cat.slug}`} prefetch={false} className="hover:text-text-primary transition-colors">
                     {cat.name}
                   </Link>
                 </li>
@@ -66,27 +66,27 @@ export const Footer: React.FC = () => {
             <h5 className="text-[11px] font-bold uppercase tracking-wider text-text-primary">Navigation</h5>
             <ul className="flex flex-col gap-1.5 text-xs text-text-secondary">
               <li>
-                <Link href="/tools" className="hover:text-text-primary transition-colors">
+                <Link href="/tools" prefetch={false} className="hover:text-text-primary transition-colors">
                   All {ALL_TOOLS.length} Tools
                 </Link>
               </li>
               <li>
-                <Link href="/pricing" className="hover:text-text-primary transition-colors">
+                <Link href="/pricing" prefetch={false} className="hover:text-text-primary transition-colors">
                   Pricing Plans
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-text-primary transition-colors">
+                <Link href="/about" prefetch={false} className="hover:text-text-primary transition-colors">
                   About & Philosophy
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-text-primary transition-colors">
+                <Link href="/contact" prefetch={false} className="hover:text-text-primary transition-colors">
                   Contact Support
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:text-text-primary transition-colors">
+                <Link href="/dashboard" prefetch={false} className="hover:text-text-primary transition-colors">
                   Dashboard
                 </Link>
               </li>
@@ -98,16 +98,16 @@ export const Footer: React.FC = () => {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-text-tertiary gap-3">
           <p>© {new Date().getFullYear()} {SITE_NAME}. Free and private tools.</p>
           <div className="flex items-center gap-5">
-            <Link href="/privacy" className="hover:text-text-secondary transition-colors">
+            <Link href="/privacy" prefetch={false} className="hover:text-text-secondary transition-colors">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-text-secondary transition-colors">
+            <Link href="/terms" prefetch={false} className="hover:text-text-secondary transition-colors">
               Terms of Service
             </Link>
-            <Link href="/contact" className="hover:text-text-secondary transition-colors">
+            <Link href="/contact" prefetch={false} className="hover:text-text-secondary transition-colors">
               Contact Us
             </Link>
-            <Link href="/about" className="hover:text-text-secondary transition-colors">
+            <Link href="/about" prefetch={false} className="hover:text-text-secondary transition-colors">
               About & Security
             </Link>
           </div>
