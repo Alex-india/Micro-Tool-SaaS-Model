@@ -125,6 +125,8 @@ export async function generateStaticParams() {
   }));
 }
 
+export const dynamicParams = false;
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const tool = getToolBySlug(params.tool);
   if (!tool) return {};

@@ -334,7 +334,7 @@ export const ImageStudioView: React.FC<ImageStudioViewProps> = ({ tool }) => {
         </div>
 
         {/* Right Column Preview */}
-        <div className="lg:col-span-7 flex flex-col gap-5 bg-surface border border-border rounded-xl p-6 shadow-card sticky top-20">
+        <div className="lg:col-span-7 flex flex-col gap-5 bg-surface border border-border rounded-xl p-4 sm:p-6 shadow-card lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider">Processed Result Preview</h3>
             {(processedUrl || previewUrl) && (

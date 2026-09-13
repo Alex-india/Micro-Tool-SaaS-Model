@@ -126,7 +126,7 @@ export const SIPCalculatorView: React.FC<SIPCalculatorViewProps> = ({ tool }) =>
         </div>
 
         {/* Right Column: Output Metrics & Charts */}
-        <div className="lg:col-span-7 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-7 flex flex-col gap-6 lg:sticky lg:top-24">
           <ResultDisplay
             primaryMetric={{
               label: "Estimated Maturity Value",

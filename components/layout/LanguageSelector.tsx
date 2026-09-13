@@ -111,7 +111,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
 
         {/* Dropdown menu - always mounted in DOM to prevent translation re-trigger */}
         <div
-          className={`skiptranslate notranslate absolute bottom-full left-0 mb-2 w-72 sm:w-80 bg-surface border border-border rounded-xl shadow-2xl p-2.5 z-50 transition-all duration-150 origin-bottom-left ${
+          className={`skiptranslate notranslate absolute bottom-full left-0 mb-2 w-72 sm:w-80 max-w-[calc(100vw-24px)] bg-surface border border-border rounded-xl shadow-2xl p-2.5 z-50 transition-all duration-150 origin-bottom-left ${
             isOpen ? "opacity-100 visible pointer-events-auto scale-100" : "opacity-0 invisible pointer-events-none scale-95"
           }`}
           translate="no"
@@ -183,20 +183,20 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         type="button"
         translate="no"
         onClick={() => setIsOpen(!isOpen)}
-        className="skiptranslate notranslate flex items-center gap-2 h-9 sm:h-10 px-3 text-xs sm:text-sm font-semibold text-text-secondary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-xl transition-all shadow-sm group"
+        className="skiptranslate notranslate flex items-center gap-1.5 sm:gap-2 h-8.5 sm:h-10 px-2 sm:px-3 text-xs sm:text-sm font-semibold text-text-secondary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-lg sm:rounded-xl transition-all shadow-sm group shrink-0"
         title={`Change Language (Current: ${currentLanguage.name})`}
         aria-label="Language Selector"
       >
-        <Globe className="w-4 h-4 text-accent group-hover:rotate-12 transition-transform shrink-0" />
+        <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-accent group-hover:rotate-12 transition-transform shrink-0" />
         <span className="skiptranslate notranslate font-semibold text-xs sm:text-sm text-text-primary" translate="no">
           {getShortCode(currentLanguage.code)}
         </span>
-        <ChevronDown className={`w-3.5 h-3.5 text-text-tertiary group-hover:text-text-primary transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 text-text-tertiary group-hover:text-text-primary transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
 
       {/* Dropdown Popup - Always mounted with CSS visibility to prevent Google Translate dynamic re-translation */}
       <div
-        className={`skiptranslate notranslate absolute top-full right-0 mt-2 w-72 sm:w-80 bg-surface border border-border rounded-xl shadow-2xl p-2.5 z-50 transition-all duration-150 origin-top-right ${
+        className={`skiptranslate notranslate absolute top-full right-0 mt-2 w-72 sm:w-80 max-w-[calc(100vw-24px)] bg-surface border border-border rounded-xl shadow-2xl p-2.5 z-50 transition-all duration-150 origin-top-right ${
           isOpen ? "opacity-100 visible pointer-events-auto scale-100" : "opacity-0 invisible pointer-events-none scale-95"
         }`}
         translate="no"

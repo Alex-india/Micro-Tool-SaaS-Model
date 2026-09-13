@@ -53,24 +53,24 @@ export const ResultDisplay = React.memo<ResultDisplayProps>(({
   };
 
   return (
-    <div className="flex flex-col gap-5 bg-surface border border-border rounded-lg p-5 shadow-subtle">
+    <div className="flex flex-col gap-4 sm:gap-5 bg-surface border border-border rounded-xl p-4 sm:p-5 shadow-subtle">
       {/* Primary metric section */}
-      <div className="flex flex-col gap-1 pb-4 border-b border-border">
+      <div className="flex flex-col gap-1 pb-3 sm:pb-4 border-b border-border">
         <span className="text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
           {primaryMetric.label}
         </span>
-        <div className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight font-mono">
+        <div className="text-2xl sm:text-4xl font-extrabold text-text-primary tracking-tight font-mono truncate">
           {primaryMetric.value || "—"}
         </div>
       </div>
 
       {/* Grid of secondary metrics */}
       {secondaryMetrics.length > 0 && (
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {secondaryMetrics.map((item, idx) => (
-            <div key={idx} className="flex flex-col gap-0.5 p-3 rounded-md bg-surface-raised border border-border/80">
-              <span className="text-[11px] text-text-secondary">{item.label}</span>
-              <span className="text-base font-bold font-mono text-text-primary">
+            <div key={idx} className="flex flex-col gap-0.5 p-2.5 sm:p-3 rounded-lg bg-surface-raised border border-border/80">
+              <span className="text-[10px] sm:text-[11px] text-text-secondary truncate">{item.label}</span>
+              <span className="text-sm sm:text-base font-bold font-mono text-text-primary truncate">
                 {item.value !== undefined && item.value !== "" ? item.value : "—"}
               </span>
             </div>

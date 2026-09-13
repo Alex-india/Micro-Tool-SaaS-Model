@@ -263,7 +263,7 @@ export const QRCodeGeneratorView: React.FC<QRCodeGeneratorViewProps> = ({ tool }
           </div>
 
           {/* Right Column Preview */}
-          <div className="lg:col-span-5 flex flex-col items-center gap-6 bg-surface border border-border rounded-xl p-8 shadow-card sticky top-20">
+          <div className="lg:col-span-5 flex flex-col items-center gap-6 bg-surface border border-border rounded-xl p-4 sm:p-8 shadow-card lg:sticky lg:top-24">
             <div className="p-4 bg-white rounded-2xl shadow-subtle flex items-center justify-center border border-border/50">
               {qrDataUrl ? (
                 <img src={qrDataUrl} alt="Generated QR Code" className="w-56 h-56 sm:w-64 sm:h-64 object-contain" />

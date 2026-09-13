@@ -41,22 +41,23 @@ export const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       <div
         className={cn(
-          "relative bg-surface border border-border rounded-xl shadow-2xl w-full p-6 z-10 animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto",
+          "relative bg-surface border border-border rounded-2xl shadow-2xl w-full p-4 sm:p-6 z-10 animate-in fade-in zoom-in-95 duration-150 max-h-[92dvh] overflow-y-auto",
           maxWidths[maxWidth]
         )}
       >
-        <div className="flex items-center justify-between pb-4 border-b border-border mb-4">
-          {title && <h3 className="text-lg font-bold text-text-primary">{title}</h3>}
+        <div className="flex items-center justify-between pb-3 sm:pb-4 border-b border-border mb-3 sm:mb-4">
+          {title && <h3 className="text-base sm:text-lg font-bold text-text-primary">{title}</h3>}
           <button
             onClick={onClose}
-            className="p-1 text-text-tertiary hover:text-text-primary hover:bg-surface-raised rounded-md transition-colors ml-auto"
+            className="w-8 h-8 flex items-center justify-center text-text-tertiary hover:text-text-primary hover:bg-surface-raised rounded-lg transition-colors ml-auto shrink-0"
+            aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
           </button>

@@ -886,7 +886,7 @@ export const PDFStudioView: React.FC<PDFStudioViewProps> = ({ tool }) => {
         </div>
 
         {/* Right Column: Visual Previews, Thumbnails & Download Output */}
-        <div className="lg:col-span-7 flex flex-col gap-5 bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card sticky top-20">
+        <div className="lg:col-span-7 flex flex-col gap-5 bg-surface border border-border rounded-xl p-4 sm:p-6 shadow-card lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
               <ShieldCheck className="w-4 h-4 text-emerald-400" /> Output & Preview

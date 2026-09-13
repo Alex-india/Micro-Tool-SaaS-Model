@@ -32,7 +32,7 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
 
   return (
     <article
-      className="mt-16 pt-12 border-t border-border flex flex-col gap-12 max-w-5xl mx-auto w-full"
+      className="mt-10 sm:mt-16 pt-8 sm:pt-12 border-t border-border flex flex-col gap-8 sm:gap-12 max-w-5xl mx-auto w-full"
       style={{ contentVisibility: "auto", containIntrinsicSize: "900px" }}
     >
       {/* JSON-LD Schema Script Injections */}
@@ -50,31 +50,31 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
       />
 
       {/* Header Badge */}
-      <div className="flex items-center justify-between border-b border-border pb-4">
-        <span className="text-[11px] font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">
+      <div className="flex items-center justify-between border-b border-border pb-4 gap-2 flex-wrap">
+        <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">
           In-Depth Technical & User Guide
         </span>
-        <span className="text-[11px] font-mono text-text-tertiary">
-          ~{article.wordCount} Words • Comprehensive Guide
+        <span className="text-[10px] sm:text-[11px] font-mono text-text-tertiary">
+          ~{article.wordCount} Words • Comprehensive
         </span>
       </div>
 
       {/* Section 1: Overview & Definition */}
       <section className="flex flex-col gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2.5">
-          <BookOpen className="w-5 h-5 text-accent" />
-          {article.introduction.title}
+          <BookOpen className="w-5 h-5 text-accent shrink-0" />
+          <span>{article.introduction.title}</span>
         </h2>
-        <div className="flex flex-col gap-3 text-sm text-text-secondary leading-relaxed">
+        <div className="flex flex-col gap-3 text-xs sm:text-sm text-text-secondary leading-relaxed">
           {article.introduction.paragraphs.map((p, idx) => (
             <p key={idx}>{p}</p>
           ))}
         </div>
 
         {/* Key Takeaways Grid */}
-        <div className="mt-3 p-5 rounded-xl bg-surface border border-border flex flex-col gap-3 shadow-subtle">
+        <div className="mt-3 p-4 sm:p-5 rounded-xl bg-surface border border-border flex flex-col gap-3 shadow-subtle">
           <span className="text-xs font-bold uppercase tracking-wider text-text-primary flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
             Key Architecture & Operational Highlights
           </span>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-text-secondary">
@@ -91,12 +91,12 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
       {/* Section 2: Step-by-Step How-To Guide */}
       <section className="flex flex-col gap-5">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2.5">
-          <ListOrdered className="w-5 h-5 text-indigo-400" />
-          {article.howToGuide.title}
+          <ListOrdered className="w-5 h-5 text-indigo-400 shrink-0" />
+          <span>{article.howToGuide.title}</span>
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {article.howToGuide.steps.map((step) => (
-            <div key={step.stepNumber} className="bg-surface border border-border rounded-xl p-5 flex flex-col gap-2 shadow-subtle">
+            <div key={step.stepNumber} className="bg-surface border border-border rounded-xl p-4 sm:p-5 flex flex-col gap-2 shadow-subtle">
               <div className="flex items-center gap-2.5">
                 <span className="w-6 h-6 rounded-full bg-accent/20 text-accent font-mono font-bold text-xs flex items-center justify-center shrink-0">
                   {step.stepNumber}
@@ -121,15 +121,15 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
       {/* Section 3: Technical & Mathematical Mechanics */}
       <section className="flex flex-col gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2.5">
-          <Calculator className="w-5 h-5 text-emerald-400" />
-          {article.technicalMechanics.title}
+          <Calculator className="w-5 h-5 text-emerald-400 shrink-0" />
+          <span>{article.technicalMechanics.title}</span>
         </h2>
-        <p className="text-sm text-text-secondary leading-relaxed">
+        <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
           {article.technicalMechanics.explanation}
         </p>
 
         {article.technicalMechanics.formula && (
-          <div className="my-1 p-4 rounded-xl bg-surface border border-border font-mono text-xs text-accent">
+          <div className="my-1 p-3.5 sm:p-4 rounded-xl bg-surface border border-border font-mono text-xs text-accent overflow-x-auto touch-scroll">
             <span className="text-text-tertiary block mb-1 uppercase font-semibold text-[10px] tracking-wider">Formula / Algorithm Definition:</span>
             {article.technicalMechanics.formula}
           </div>
@@ -159,12 +159,12 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
       {/* Section 4: Real-World Use Cases */}
       <section className="flex flex-col gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2.5">
-          <Layers className="w-5 h-5 text-amber-400" />
-          {article.useCases.title}
+          <Layers className="w-5 h-5 text-amber-400 shrink-0" />
+          <span>{article.useCases.title}</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {article.useCases.cases.map((uc, idx) => (
-            <div key={idx} className="bg-surface border border-border rounded-xl p-5 flex flex-col justify-between gap-3 shadow-subtle">
+            <div key={idx} className="bg-surface border border-border rounded-xl p-4 sm:p-5 flex flex-col justify-between gap-3 shadow-subtle">
               <div className="flex flex-col gap-1.5">
                 <h3 className="text-xs font-bold text-text-primary uppercase tracking-wide text-accent">
                   {uc.role}
@@ -184,24 +184,24 @@ export const SEOContent = React.memo<SEOContentProps>(({ tool }) => {
       {/* Section 5: Comparison Matrix */}
       <section className="flex flex-col gap-4">
         <h2 className="text-xl sm:text-2xl font-bold text-text-primary flex items-center gap-2.5">
-          <Table2 className="w-5 h-5 text-purple-400" />
-          {article.comparisonMatrix.title}
+          <Table2 className="w-5 h-5 text-purple-400 shrink-0" />
+          <span>{article.comparisonMatrix.title}</span>
         </h2>
-        <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+        <div className="overflow-x-auto touch-scroll rounded-xl border border-border bg-surface">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
               <tr className="border-b border-border bg-surface-raised text-text-primary uppercase text-[10px] tracking-wider font-semibold">
                 {article.comparisonMatrix.headers.map((h, i) => (
-                  <th key={i} className="py-3 px-4">{h}</th>
+                  <th key={i} className="py-3 px-3.5 sm:px-4 whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border/60 text-text-secondary">
               {article.comparisonMatrix.rows.map((row, idx) => (
                 <tr key={idx} className="hover:bg-surface-raised/50 transition-colors">
-                  <td className="py-3 px-4 font-medium text-text-primary">{row.feature}</td>
-                  <td className="py-3 px-4 text-emerald-400 font-semibold">{row.toolVerse}</td>
-                  <td className="py-3 px-4 text-rose-300">{row.traditional}</td>
+                  <td className="py-3 px-3.5 sm:px-4 font-medium text-text-primary whitespace-nowrap">{row.feature}</td>
+                  <td className="py-3 px-3.5 sm:px-4 text-emerald-400 font-semibold whitespace-nowrap">{row.toolVerse}</td>
+                  <td className="py-3 px-3.5 sm:px-4 text-rose-300 whitespace-nowrap">{row.traditional}</td>
                 </tr>
               ))}
             </tbody>

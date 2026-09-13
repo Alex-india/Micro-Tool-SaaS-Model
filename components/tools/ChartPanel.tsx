@@ -39,16 +39,16 @@ export const ChartPanel = React.memo<ChartPanelProps>(({
   if (!data || data.length === 0) return null;
 
   return (
-    <div className="w-full bg-surface border border-border rounded-xl p-5 shadow-card flex flex-col gap-4">
+    <div className="w-full bg-surface border border-border rounded-xl p-3.5 sm:p-5 shadow-card flex flex-col gap-3 sm:gap-4">
       {title && (
-        <h4 className="text-sm font-bold text-text-primary tracking-tight">
+        <h4 className="text-xs sm:text-sm font-bold text-text-primary tracking-tight">
           {title}
         </h4>
       )}
-      <div className="w-full h-64 sm:h-72">
+      <div className="w-full h-56 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           {type === "area" ? (
-            <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+            <AreaChart data={data} margin={{ top: 10, right: 8, left: -15, bottom: 0 }}>
               <defs>
                 {series.map((s) => (
                   <linearGradient key={s.key} id={`grad-${s.key}`} x1="0" y1="0" x2="0" y2="1">
@@ -58,8 +58,8 @@ export const ChartPanel = React.memo<ChartPanelProps>(({
                 ))}
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#22222E" />
-              <XAxis dataKey={xKey} stroke="#8888AA" fontSize={11} />
-              <YAxis stroke="#8888AA" fontSize={11} tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v)} />
+              <XAxis dataKey={xKey} stroke="#8888AA" fontSize={10} tickLine={false} />
+              <YAxis stroke="#8888AA" fontSize={10} tickLine={false} tickFormatter={(v) => (v >= 1000 ? `${(v / 1000).toFixed(0)}k` : v)} />
               <Tooltip
                 contentStyle={{
                   backgroundColor: "#18181F",

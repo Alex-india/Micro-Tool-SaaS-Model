@@ -287,7 +287,7 @@ export const TaxAndSalaryCalculatorView: React.FC<TaxAndSalaryCalculatorViewProp
         </div>
 
         {/* Right Outputs Panel */}
-        <div className="lg:col-span-7 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-7 flex flex-col gap-6 lg:sticky lg:top-24">
           {isSalaryTool ? (
             <>
               <ResultDisplay

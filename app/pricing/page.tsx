@@ -430,24 +430,24 @@ export default function PricingPage() {
         </div>
 
         <div className="bg-surface border border-border rounded-xl overflow-hidden shadow-subtle text-xs sm:text-sm">
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto touch-scroll">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-surface-raised border-b border-border text-text-primary font-bold text-xs uppercase">
-                  <th className="p-4">Feature</th>
-                  <th className="p-4 text-center">Free (₹0)</th>
-                  <th className="p-4 text-center">Monthly (₹399)</th>
-                  <th className="p-4 text-center text-accent">Yearly (₹3,999)</th>
-                  <th className="p-4 text-center text-purple-300">Lifetime (₹24,999)</th>
+                  <th className="p-3 sm:p-4 whitespace-nowrap">Feature</th>
+                  <th className="p-3 sm:p-4 text-center whitespace-nowrap">Free (₹0)</th>
+                  <th className="p-3 sm:p-4 text-center whitespace-nowrap">Monthly (₹399)</th>
+                  <th className="p-3 sm:p-4 text-center text-accent whitespace-nowrap">Yearly (₹3,999)</th>
+                  <th className="p-3 sm:p-4 text-center text-purple-300 whitespace-nowrap">Lifetime (₹24,999)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/60 font-medium text-text-secondary">
                 <tr className="hover:bg-surface-raised/30">
-                  <td className="p-4 font-bold text-text-primary">Tool Access</td>
-                  <td className="p-4 text-center">50+ Basic Tools</td>
-                  <td className="p-4 text-center">150+ Advanced Tools</td>
-                  <td className="p-4 text-center font-bold text-accent">All {ALL_TOOLS.length}+ Pro Tools</td>
-                  <td className="p-4 text-center font-bold text-purple-300">All {ALL_TOOLS.length}+ & Future Tools</td>
+                  <td className="p-3 sm:p-4 font-bold text-text-primary whitespace-nowrap">Tool Access</td>
+                  <td className="p-3 sm:p-4 text-center whitespace-nowrap">50+ Basic Tools</td>
+                  <td className="p-3 sm:p-4 text-center whitespace-nowrap">150+ Advanced Tools</td>
+                  <td className="p-3 sm:p-4 text-center font-bold text-accent whitespace-nowrap">All {ALL_TOOLS.length}+ Pro Tools</td>
+                  <td className="p-3 sm:p-4 text-center font-bold text-purple-300 whitespace-nowrap">All {ALL_TOOLS.length}+ & Future Tools</td>
                 </tr>
                 <tr className="hover:bg-surface-raised/30">
                   <td className="p-4 font-bold text-text-primary">PDF Upload Limit</td>

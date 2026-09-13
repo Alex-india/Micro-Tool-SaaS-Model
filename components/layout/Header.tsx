@@ -262,14 +262,14 @@ export const Header: React.FC = () => {
   return (
     <>
       <header className="sticky top-0 z-40 w-full h-16 sm:h-[68px] glass-panel transition-colors">
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto h-full px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Desktop Navigation */}
-          <div className="flex items-center gap-6 lg:gap-8 shrink-0">
-            <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-accent text-white flex items-center justify-center font-extrabold shadow-sm transition-transform duration-150 group-hover:scale-105">
-                <LayoutGrid className="w-5 h-5" />
+          <div className="flex items-center gap-3 md:gap-6 lg:gap-8 shrink-0 min-w-0">
+            <Link href="/" className="flex items-center gap-2 sm:gap-2.5 group shrink-0">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-accent text-white flex items-center justify-center font-extrabold shadow-sm transition-transform duration-150 group-hover:scale-105 shrink-0">
+                <LayoutGrid className="w-4 h-4 sm:w-5 sm:h-5" />
               </div>
-              <span className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
+              <span className="text-base sm:text-xl font-extrabold tracking-tight text-text-primary truncate">
                 {SITE_NAME}
               </span>
             </Link>
@@ -281,12 +281,13 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             {/* Search Trigger Button */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2.5 h-9 sm:h-10 px-3 sm:px-3.5 text-xs sm:text-sm font-medium text-text-secondary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-xl transition-colors shadow-sm"
+              className="flex items-center justify-center sm:justify-start gap-2 h-8.5 w-8.5 sm:w-auto sm:h-10 px-0 sm:px-3.5 text-xs sm:text-sm font-medium text-text-secondary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-lg sm:rounded-xl transition-colors shadow-sm shrink-0"
               title="Search tools (⌘K)"
+              aria-label="Search tools"
             >
               <Search className="w-4 h-4 text-text-tertiary shrink-0" />
               <span className="hidden lg:inline text-xs sm:text-sm text-text-tertiary">Search tools...</span>
@@ -298,13 +299,14 @@ export const Header: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-xl transition-colors shadow-sm shrink-0"
+              className="w-8.5 h-8.5 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-lg sm:rounded-xl transition-colors shadow-sm shrink-0"
               title="Toggle theme"
+              aria-label="Toggle theme"
             >
               {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
 
-            {/* Language Selector Desktop */}
+            {/* Language Selector Header */}
             <LanguageSelector variant="header" />
 
             {/* User & Auth CTA Desktop */}
@@ -359,10 +361,11 @@ export const Header: React.FC = () => {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border rounded-xl transition-colors"
+              className="md:hidden w-8.5 h-8.5 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border rounded-lg sm:rounded-xl transition-colors shrink-0"
               title="Open mobile menu"
+              aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-5 h-5 text-accent" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -370,79 +373,156 @@ export const Header: React.FC = () => {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-x-0 top-14 bg-surface border-b border-border p-5 flex flex-col gap-3 z-30 md:hidden shadow-lg animate-in slide-in-from-top-1">
-          <nav className="flex flex-col gap-1.5 font-medium text-xs text-text-primary">
-            <Link
-              href="/tools"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
-            >
-              <span>All Tools ({ALL_TOOLS.length})</span>
-              <ArrowRight className="w-3.5 h-3.5 text-text-tertiary" />
-            </Link>
-            <Link
-              href="/tools?category=finance"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
-            >
-              <span>Finance Calculators</span>
-              <span className="text-[10px] text-accent font-semibold">20 tools</span>
-            </Link>
-            <Link
-              href="/tools?category=developer"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
-            >
-              <span>Developer Tools</span>
-              <span className="text-[10px] text-accent font-semibold">17 tools</span>
-            </Link>
-            <Link
-              href="/tools?category=pdf"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised flex items-center justify-between"
-            >
-              <span>PDF Utilities</span>
-              <span className="text-[10px] text-accent font-semibold">18 tools</span>
-            </Link>
-            <Link
-              href="/pricing"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised"
-            >
-              Pricing Plans
-            </Link>
-            <Link
-              href="/about"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised"
-            >
-              About
-            </Link>
-            <Link
-              href="/dashboard"
-              prefetch={false}
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2.5 rounded-md hover:bg-surface-raised"
-            >
-              Dashboard
-            </Link>
-          </nav>
-          
-          {/* Mobile Language Selector */}
-          <div className="pt-2 border-t border-border">
-            <LanguageSelector variant="mobile" />
+        <div className="fixed inset-x-0 top-16 sm:top-[68px] bottom-0 bg-surface/98 backdrop-blur-xl border-b border-border p-4 sm:p-5 flex flex-col justify-between gap-4 z-40 md:hidden shadow-2xl overflow-y-auto max-h-[calc(100dvh-64px)] animate-in slide-in-from-top-2 duration-150">
+          <div className="flex flex-col gap-4">
+            {/* User Auth Section on Mobile */}
+            {user ? (
+              <div className="p-3 rounded-xl bg-surface-raised border border-border flex items-center justify-between">
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3"
+                >
+                  <div className="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center text-sm font-extrabold">
+                    {user.name.charAt(0)}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-text-primary">{user.name}</span>
+                    <span className="text-[10px] text-text-tertiary">{user.email}</span>
+                  </div>
+                </Link>
+                <div className="flex items-center gap-2">
+                  {user.plan === "pro" ? (
+                    <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] uppercase font-bold flex items-center gap-0.5">
+                      <Sparkles className="w-3 h-3" /> PRO
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded bg-surface border border-border text-text-tertiary text-[10px] uppercase font-bold">
+                      FREE
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="p-1.5 text-text-tertiary hover:text-red-400"
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 gap-2 pb-1 border-b border-border">
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="font-bold text-xs"
+                  onClick={() => {
+                    openAuthModal("login");
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Log In
+                </Button>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="font-bold text-xs"
+                  onClick={() => {
+                    openAuthModal("signup");
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </div>
+            )}
+
+            {/* Navigation Links */}
+            <nav className="flex flex-col gap-1 font-medium text-xs text-text-primary">
+              <Link
+                href="/tools"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised flex items-center justify-between font-bold"
+              >
+                <span>All Utilities Directory</span>
+                <span className="text-[10px] font-mono text-text-tertiary">{ALL_TOOLS.length} Tools</span>
+              </Link>
+              <Link
+                href="/tools?category=finance"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-emerald-400" /> Finance Calculators
+                </span>
+                <span className="text-[10px] text-emerald-400 font-semibold">20 tools</span>
+              </Link>
+              <Link
+                href="/tools?category=developer"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <Code2 className="w-4 h-4 text-blue-400" /> Developer Tools
+                </span>
+                <span className="text-[10px] text-blue-400 font-semibold">17 tools</span>
+              </Link>
+              <Link
+                href="/tools?category=pdf"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-amber-400" /> PDF & Document Tools
+                </span>
+                <span className="text-[10px] text-amber-400 font-semibold">18 tools</span>
+              </Link>
+              <Link
+                href="/pricing"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-purple-400" /> Pro Pricing Plans
+                </span>
+                <span className="text-[10px] text-purple-400 font-bold">From ₹399</span>
+              </Link>
+              <Link
+                href="/about"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised"
+              >
+                About & Client-Side Privacy
+              </Link>
+              <Link
+                href="/contact"
+                prefetch={false}
+                onClick={() => setMobileMenuOpen(false)}
+                className="p-2.5 rounded-lg hover:bg-surface-raised"
+              >
+                Contact Support
+              </Link>
+            </nav>
+            
+            {/* Mobile Language Selector */}
+            <div className="pt-2 border-t border-border">
+              <LanguageSelector variant="mobile" />
+            </div>
           </div>
 
-          <div className="pt-3 border-t border-border">
+          <div className="pt-3 border-t border-border mt-auto">
             <Link href="/pricing" prefetch={false} onClick={() => setMobileMenuOpen(false)}>
-              <Button variant="primary" className="w-full" size="sm">
-                View Pro Plans
+              <Button variant="primary" className="w-full font-bold shadow-md" size="md">
+                <Sparkles className="w-4 h-4" /> View All Pro Plans
               </Button>
             </Link>
           </div>
@@ -453,11 +533,11 @@ export const Header: React.FC = () => {
       <Modal isOpen={searchOpen} onClose={() => setSearchOpen(false)} maxWidth="lg">
         <div className="flex flex-col gap-3">
           <div className="relative">
-            <Search className="absolute left-3.5 top-3 w-4 h-4 text-text-tertiary" />
+            <Search className="absolute left-3.5 top-3 w-4 h-4 text-text-tertiary pointer-events-none" />
             <input
               type="text"
               autoFocus
-              placeholder="Search by tool name, keyword, or category (e.g. SIP, EMI, JSON, PDF, QR)..."
+              placeholder="Search tools (e.g. SIP, EMI, JSON, PDF, QR)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-surface-raised border border-border rounded-lg pl-10 pr-4 py-2.5 text-sm text-text-primary outline-none focus:border-accent shadow-sm"

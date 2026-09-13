@@ -13,6 +13,8 @@ export function generateStaticParams() {
   }));
 }
 
+export const dynamicParams = false;
+
 export default function CategoryPage({ params }: CategoryPageProps) {
   const category = CATEGORIES.find((c) => c.slug === params.category);
   if (!category) {

@@ -163,7 +163,7 @@ export const InvoiceGeneratorView: React.FC<InvoiceGeneratorViewProps> = ({ tool
         </div>
 
         {/* Right Column Live Preview Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-4 sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-4 lg:sticky lg:top-24">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-text-secondary">Live PDF Preview</span>
             <Button variant="primary" size="sm" onClick={handlePrint} leftIcon={<Printer className="w-3.5 h-3.5" />}>
@@ -171,7 +171,7 @@ export const InvoiceGeneratorView: React.FC<InvoiceGeneratorViewProps> = ({ tool
             </Button>
           </div>
 
-          <div className="bg-white text-slate-900 rounded-xl p-8 shadow-2xl border border-slate-200 font-sans text-xs flex flex-col gap-6">
+          <div className="bg-white text-slate-900 rounded-xl p-4 sm:p-8 shadow-2xl border border-slate-200 font-sans text-xs flex flex-col gap-6 overflow-x-auto">
             <div className="flex justify-between items-start border-b border-slate-200 pb-4">
               <div>
                 <h2 className="text-xl font-bold text-slate-900">{senderName || "Your Business Name"}</h2>

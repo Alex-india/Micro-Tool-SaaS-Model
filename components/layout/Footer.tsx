@@ -6,11 +6,11 @@ import { LanguageSelector } from "@/components/layout/LanguageSelector";
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-surface border-t border-border mt-16 pt-12 pb-10 text-text-secondary text-xs">
+    <footer className="w-full bg-surface border-t border-border mt-12 sm:mt-16 pt-10 sm:pt-12 pb-8 sm:pb-10 text-text-secondary text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-10 border-b border-border">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 sm:gap-8 pb-8 sm:pb-10 border-b border-border">
           {/* Col 1 Brand */}
-          <div className="md:col-span-2 flex flex-col gap-3">
+          <div className="col-span-2 md:col-span-2 flex flex-col gap-3">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-7 h-7 rounded bg-accent text-white flex items-center justify-center font-bold text-xs">
                 <LayoutGrid className="w-4 h-4" />
@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
               Fast, deterministic utilities running securely in your browser. No telemetry trackers, no data logging, 100% private.
             </p>
 
-            <div className="flex items-center gap-4 text-[11px] font-medium text-text-secondary mt-1">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px] font-medium text-text-secondary mt-1">
               <span className="flex items-center gap-1">
                 <Shield className="w-3.5 h-3.5 text-emerald-500" /> Client-Side
               </span>
@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Col 4 Platform */}
-          <div className="flex flex-col gap-2.5">
+          <div className="col-span-2 sm:col-span-1 flex flex-col gap-2.5">
             <h5 className="text-[11px] font-bold uppercase tracking-wider text-text-primary">Navigation</h5>
             <ul className="flex flex-col gap-1.5 text-xs text-text-secondary">
               <li>
@@ -101,9 +101,9 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-text-tertiary gap-3">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-text-tertiary gap-3 text-center sm:text-left">
           <p>© {new Date().getFullYear()} {SITE_NAME}. Free and private tools.</p>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-5">
             <Link href="/privacy" prefetch={false} className="hover:text-text-secondary transition-colors">
               Privacy Policy
             </Link>

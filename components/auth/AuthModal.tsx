@@ -59,11 +59,11 @@ export const AuthModal: React.FC = () => {
     <Modal isOpen={authModalOpen} onClose={closeAuthModal} maxWidth="md">
       <div className="flex flex-col gap-5 py-1">
         {/* Header Title */}
-        <div className="flex flex-col items-center text-center gap-1.5">
-          <div className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent mb-1 shadow-sm">
-            <Lock className="w-5.5 h-5.5 text-accent" />
+        <div className="flex flex-col items-center text-center gap-1.5 px-1">
+          <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-accent/10 border border-accent/30 flex items-center justify-center text-accent mb-0.5 shadow-sm">
+            <Lock className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-accent" />
           </div>
-          <h3 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight">
+          <h3 className="text-lg sm:text-2xl font-extrabold text-text-primary tracking-tight">
             {authMode === "login" ? "Welcome Back to ToolVerse" : "Create your ToolVerse Account"}
           </h3>
           <p className="text-xs sm:text-sm font-medium text-text-secondary">

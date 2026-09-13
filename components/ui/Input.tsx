@@ -44,7 +44,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             type={type}
             className={cn(
-              "w-full bg-surface border border-border rounded-lg px-3.5 py-2.5 text-sm sm:text-base font-medium text-text-primary placeholder:text-text-tertiary outline-none transition-colors duration-150 focus:border-accent focus:ring-1 focus:ring-accent shadow-sm",
+              "w-full bg-surface border border-border rounded-lg px-3.5 py-2.5 text-base sm:text-sm font-medium text-text-primary placeholder:text-text-tertiary outline-none transition-colors duration-150 focus:border-accent focus:ring-1 focus:ring-accent shadow-sm",
               prefixSymbol && "pl-8",
               suffixSymbol && "pr-11",
               error && "border-error focus:border-error focus:ring-error",

@@ -440,7 +440,7 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
         </div>
 
         {/* Right Column Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
               <Terminal className="w-3.5 h-3.5 text-emerald-400" /> Formatted Output

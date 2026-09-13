@@ -47,22 +47,22 @@ export const TableDisplay = React.memo<TableDisplayProps>(({
   };
 
   return (
-    <div className="w-full bg-surface border border-border rounded-xl p-5 shadow-card flex flex-col gap-4">
-      <div className="flex items-center justify-between">
-        {title && <h4 className="text-sm font-bold text-text-primary">{title}</h4>}
+    <div className="w-full bg-surface border border-border rounded-xl p-4 sm:p-5 shadow-card flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        {title && <h4 className="text-xs sm:text-sm font-bold text-text-primary">{title}</h4>}
         <Button variant="ghost" size="sm" onClick={downloadCSV} leftIcon={<Download className="w-3.5 h-3.5" />}>
           Export CSV
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <div className="overflow-x-auto touch-scroll rounded-lg border border-border">
         <table className="w-full text-xs text-left">
           <thead className="bg-surface-raised border-b border-border text-text-secondary uppercase font-semibold">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
-                  className={`px-4 py-3 ${
+                  className={`px-3 py-2.5 sm:px-4 sm:py-3 whitespace-nowrap ${
                     col.align === "right"
                       ? "text-right"
                       : col.align === "center"
@@ -84,7 +84,7 @@ export const TableDisplay = React.memo<TableDisplayProps>(({
                   return (
                     <td
                       key={col.key}
-                      className={`px-4 py-2.5 font-mono ${
+                      className={`px-3 py-2 sm:px-4 sm:py-2.5 font-mono whitespace-nowrap ${
                         col.align === "right"
                           ? "text-right"
                           : col.align === "center"

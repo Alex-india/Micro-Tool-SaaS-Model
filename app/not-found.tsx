@@ -68,12 +68,12 @@ export default function NotFound() {
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={`Search ${ALL_TOOLS.length} calculators, converters, utilities...`}
-          className="w-full bg-surface border border-border rounded-xl pl-10 pr-24 py-3 text-xs text-text-primary outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all shadow-subtle"
+          placeholder={`Search ${ALL_TOOLS.length} tools (e.g. SIP, EMI)...`}
+          className="w-full bg-surface border border-border rounded-xl pl-10 pr-20 py-2.5 sm:py-3 text-xs text-text-primary outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 transition-all shadow-subtle"
         />
         <button
           type="submit"
-          className="absolute right-2 px-3 py-1.5 bg-accent text-white rounded-lg text-xs font-semibold hover:bg-accent-hover transition-colors"
+          className="absolute right-1.5 px-3 py-1.5 bg-accent text-white rounded-lg text-xs font-semibold hover:bg-accent-hover transition-colors"
         >
           Search
         </button>
@@ -81,7 +81,7 @@ export default function NotFound() {
 
       {/* Popular Shortcuts */}
       <div className="flex flex-col gap-3 w-full max-w-2xl mt-2">
-        <span className="text-xs font-bold uppercase tracking-wider text-text-tertiary">
+        <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-text-tertiary">
           Popular Utilities You Might Be Looking For:
         </span>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
@@ -104,16 +104,16 @@ export default function NotFound() {
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
-        <BackButton fallbackHref="/tools" label="Go Back to Previous Page" variant="outline" size="md" />
-        <Link href="/" prefetch={false}>
-          <Button variant="primary" size="md" leftIcon={<Home className="w-4 h-4" />}>
-            Return to Homepage
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 pt-4 w-full max-w-md">
+        <BackButton fallbackHref="/tools" label="Go Back" variant="outline" size="md" className="w-full sm:w-auto justify-center" />
+        <Link href="/" prefetch={false} className="w-full sm:w-auto">
+          <Button variant="primary" size="md" leftIcon={<Home className="w-4 h-4" />} className="w-full sm:w-auto">
+            Homepage
           </Button>
         </Link>
-        <Link href="/tools" prefetch={false}>
-          <Button variant="secondary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />}>
-            Browse All Tools
+        <Link href="/tools" prefetch={false} className="w-full sm:w-auto">
+          <Button variant="secondary" size="md" rightIcon={<ArrowRight className="w-4 h-4" />} className="w-full sm:w-auto">
+            All Tools
           </Button>
         </Link>
       </div>

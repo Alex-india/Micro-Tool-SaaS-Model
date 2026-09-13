@@ -491,7 +491,7 @@ ${xmlUrls}
         </div>
 
         {/* Right Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-24">
           {isHttpStatus ? (
             <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-4">
               <div className="flex items-center justify-between border-b border-border pb-3">

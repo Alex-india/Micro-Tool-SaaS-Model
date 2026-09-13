@@ -1234,7 +1234,7 @@ export const EverydayCalculatorView: React.FC<EverydayCalculatorViewProps> = ({ 
         </div>
 
         {/* Right Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-24">
           {isPercent ? (
             <ResultDisplay
               primaryMetric={{ label: "Percentage Result", value: percentResult.primary }}

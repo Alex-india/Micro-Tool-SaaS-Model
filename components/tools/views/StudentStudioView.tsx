@@ -540,7 +540,7 @@ export const StudentStudioView: React.FC<StudentStudioViewProps> = ({ tool }) =>
         </div>
 
         {/* Right Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-24">
           {isAttendance ? (
             <ResultDisplay
               primaryMetric={{

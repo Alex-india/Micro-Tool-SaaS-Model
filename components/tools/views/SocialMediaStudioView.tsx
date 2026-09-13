@@ -392,7 +392,7 @@ export const SocialMediaStudioView: React.FC<SocialMediaStudioViewProps> = ({ to
             )}
           </div>
 
-          <div className="lg:col-span-7 flex flex-col gap-6 bg-surface border border-border rounded-xl p-6 shadow-card sticky top-20">
+          <div className="lg:col-span-7 flex flex-col gap-6 bg-surface border border-border rounded-xl p-4 sm:p-6 shadow-card lg:sticky lg:top-24">
             <div className="flex items-center justify-between border-b border-border pb-3">
               <span className="text-xs font-bold text-text-primary uppercase tracking-wider">Live Preview</span>
               {(processedUrl || previewUrl) && (

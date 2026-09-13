@@ -437,7 +437,7 @@ export const CurrencyConverterView: React.FC<CurrencyConverterViewProps> = ({ to
         </div>
 
         {/* Right Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-24">
           <ResultDisplay
             primaryMetric={{
               label: `Converted Amount in ${conversion.toName}`,

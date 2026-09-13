@@ -65,35 +65,35 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col gap-16 py-8 sm:py-12">
+    <div className="flex flex-col gap-10 sm:gap-16 py-4 sm:py-10">
       {/* Hero Section */}
-      <section className="flex flex-col items-center text-center gap-6 max-w-3xl mx-auto">
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-surface-raised border border-border text-text-secondary text-xs sm:text-sm font-semibold shadow-sm">
-          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+      <section className="flex flex-col items-center text-center gap-4 sm:gap-6 max-w-3xl mx-auto w-full">
+        <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-surface-raised border border-border text-text-secondary text-xs sm:text-sm font-semibold shadow-sm">
+          <span className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>{ALL_TOOLS.length} Free Online Utilities</span>
         </div>
 
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.15]">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-text-primary leading-[1.18] sm:leading-[1.15]">
           Fast, private tools for everyday work.
         </h1>
 
-        <p className="text-base sm:text-xl font-medium text-text-secondary max-w-2xl leading-relaxed">
+        <p className="text-sm sm:text-lg md:text-xl font-medium text-text-secondary max-w-2xl leading-relaxed px-1">
           Reliable calculators, converters, PDF utilities, and developer tools. Deterministic mathematical accuracy with zero tracking.
         </p>
 
         {/* Hero Interactive Search Bar */}
-        <div className="w-full max-w-2xl relative mt-3">
+        <div className="w-full max-w-2xl relative mt-2 sm:mt-3">
           <form onSubmit={handleSearchSubmit} className="relative flex items-center">
-            <Search className="absolute left-4 w-5 h-5 text-text-tertiary pointer-events-none" />
+            <Search className="absolute left-3.5 sm:left-4 w-4 h-4 sm:w-5 sm:h-5 text-text-tertiary pointer-events-none" />
             <input
               type="text"
-              placeholder={`Search ${ALL_TOOLS.length} tools (e.g., SIP Calculator, JSON Formatter, EMI)...`}
+              placeholder={`Search ${ALL_TOOLS.length} tools (e.g. SIP, EMI, JSON, PDF, QR)...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-surface border border-border rounded-xl pl-12 pr-28 py-3.5 text-sm sm:text-base font-medium text-text-primary placeholder:text-text-tertiary outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 shadow-md transition-all"
+              className="w-full bg-surface border border-border rounded-xl pl-10 sm:pl-12 pr-20 sm:pr-28 py-3 sm:py-3.5 text-xs sm:text-base font-medium text-text-primary placeholder:text-text-tertiary outline-none focus:border-accent focus:ring-2 focus:ring-accent/20 shadow-md transition-all"
             />
-            <div className="absolute right-2">
-              <Button variant="primary" size="md" type="submit" className="font-bold">
+            <div className="absolute right-1.5 sm:right-2">
+              <Button variant="primary" size="sm" type="submit" className="font-bold text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2">
                 Search
               </Button>
             </div>
@@ -101,19 +101,19 @@ export default function HomePage() {
 
           {/* Quick Search Dropdown */}
           {searchResults.length > 0 && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-20 text-left">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-surface border border-border rounded-xl shadow-xl overflow-hidden z-20 text-left max-h-80 overflow-y-auto">
               {searchResults.map((tool) => (
                 <Link
                   key={tool.slug}
                   href={tool.path}
                   prefetch={false}
-                  className="flex items-center justify-between p-3.5 hover:bg-surface-raised border-b border-border/50 last:border-0 transition-colors"
+                  className="flex items-center justify-between p-3 sm:p-3.5 hover:bg-surface-raised border-b border-border/50 last:border-0 transition-colors"
                 >
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-text-primary">{tool.name}</span>
-                    <span className="text-xs text-text-tertiary font-medium line-clamp-1">{tool.description}</span>
+                  <div className="flex flex-col pr-2">
+                    <span className="text-xs sm:text-sm font-bold text-text-primary">{tool.name}</span>
+                    <span className="text-[11px] sm:text-xs text-text-tertiary font-medium line-clamp-1">{tool.description}</span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-accent">Open →</span>
+                  <span className="text-xs font-mono font-bold text-accent shrink-0">Open →</span>
                 </Link>
               ))}
             </div>
@@ -121,40 +121,40 @@ export default function HomePage() {
         </div>
 
         {/* Quick Category Chips */}
-        <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2 text-xs sm:text-sm font-semibold">
-          <span className="text-text-tertiary text-xs font-bold uppercase tracking-wider">Popular:</span>
+        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2.5 pt-2 text-xs sm:text-sm font-semibold max-w-full">
+          <span className="text-text-tertiary text-[11px] sm:text-xs font-bold uppercase tracking-wider mr-1">Popular:</span>
           <Link
             href="/tools?category=finance"
             prefetch={false}
-            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold text-xs"
           >
             Finance
           </Link>
           <Link
             href="/tools?category=developer"
             prefetch={false}
-            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold text-xs"
           >
             Developer
           </Link>
           <Link
             href="/tools?category=pdf"
             prefetch={false}
-            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold text-xs"
           >
-            PDF & Documents
+            PDF Tools
           </Link>
           <Link
             href="/tools?category=text"
             prefetch={false}
-            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold text-xs"
           >
             Text Tools
           </Link>
           <Link
             href="/tools?category=privacy"
             prefetch={false}
-            className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold"
+            className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg bg-surface border border-border hover:border-border-hover text-text-secondary hover:text-text-primary transition-colors font-semibold text-xs"
           >
             Privacy
           </Link>

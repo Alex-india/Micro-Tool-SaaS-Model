@@ -84,19 +84,56 @@ function ToolsDirectoryContent() {
 
       {/* Directory Title Header */}
       <div className="flex flex-col gap-1.5">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
+        <h1 className="text-2xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
           {activeCategoryObj ? `${activeCategoryObj.name} Tools` : "Tools Directory"}
         </h1>
-        <p className="text-sm sm:text-base font-medium text-text-secondary">
+        <p className="text-xs sm:text-base font-medium text-text-secondary">
           {activeCategoryObj
             ? `Browse all ${filteredTools.length} ${activeCategoryObj.name.toLowerCase()} utilities. Fast, 100% private, and client-side.`
             : `Browse all ${ALL_TOOLS.length} utility tools across ${CATEGORIES.length} domains. Fast, local, and completely free of tracking.`}
         </p>
       </div>
 
+      {/* Mobile Horizontal Category Pills (Visible on < lg) */}
+      <div className="lg:hidden flex overflow-x-auto no-scrollbar gap-2 pb-1 pt-1 touch-scroll w-full">
+        <button
+          onClick={() => handleCategorySelect("all")}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 border transition-all ${
+            selectedCategory === "all"
+              ? "bg-accent border-accent text-white shadow-sm"
+              : "bg-surface border-border text-text-secondary hover:text-text-primary"
+          }`}
+        >
+          <Layers className="w-3.5 h-3.5" />
+          <span>All</span>
+          <span className="opacity-80 font-mono text-[10px]">({ALL_TOOLS.length})</span>
+        </button>
+
+        {CATEGORIES.map((cat) => {
+          const count = ALL_TOOLS.filter((t) => t.category === cat.slug).length;
+          const isSelected = selectedCategory === cat.slug;
+
+          return (
+            <button
+              key={cat.slug}
+              onClick={() => handleCategorySelect(cat.slug)}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold whitespace-nowrap shrink-0 border transition-all ${
+                isSelected
+                  ? "bg-accent border-accent text-white shadow-sm"
+                  : "bg-surface border-border text-text-secondary hover:text-text-primary"
+              }`}
+            >
+              <ToolIcon name={cat.icon} className="w-3.5 h-3.5" />
+              <span>{cat.name}</span>
+              <span className="opacity-80 font-mono text-[10px]">({count})</span>
+            </button>
+          );
+        })}
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* Left Sidebar Category Filter */}
-        <aside className="lg:col-span-3 flex flex-col gap-1 bg-surface border border-border p-3.5 rounded-xl shadow-subtle sticky top-20">
+        {/* Desktop Left Sidebar Category Filter (Hidden on < lg) */}
+        <aside className="hidden lg:flex lg:col-span-3 flex-col gap-1 bg-surface border border-border p-3.5 rounded-xl shadow-subtle sticky top-24">
           <span className="text-xs font-extrabold uppercase tracking-wider text-text-tertiary px-2.5 py-2 border-b border-border mb-1">
             Categories ({CATEGORIES.length})
           </span>
@@ -142,58 +179,60 @@ function ToolsDirectoryContent() {
         {/* Main Content Tools Grid */}
         <main className="lg:col-span-9 flex flex-col gap-5">
           {/* Top Bar Controls */}
-          <div className="flex flex-wrap items-center justify-between gap-3 bg-surface border border-border p-3 rounded-lg shadow-subtle">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-surface border border-border p-3 rounded-xl shadow-subtle">
             {/* Search Input */}
-            <div className="relative flex-1 min-w-[200px]">
+            <div className="relative flex-1 min-w-0">
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-text-tertiary" />
               <input
                 type="text"
-                placeholder="Search tools by name, tag, or function..."
+                placeholder="Search tools by name, keyword..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-surface-raised border border-border rounded-md pl-9 pr-3 py-1.5 text-xs text-text-primary outline-none focus:border-accent"
+                className="w-full bg-surface-raised border border-border rounded-lg pl-9 pr-3 py-2 text-xs text-text-primary outline-none focus:border-accent"
               />
             </div>
 
-            {/* Plan Filter Toggle */}
-            <div className="flex items-center gap-1 bg-surface-raised border border-border p-0.5 rounded-md text-xs">
-              <button
-                onClick={() => setPlanFilter("all")}
-                className={`px-2.5 py-1 rounded transition-colors ${
-                  planFilter === "all" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                All
-              </button>
-              <button
-                onClick={() => setPlanFilter("free")}
-                className={`px-2.5 py-1 rounded transition-colors ${
-                  planFilter === "free" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                Free
-              </button>
-              <button
-                onClick={() => setPlanFilter("premium")}
-                className={`px-2.5 py-1 rounded transition-colors ${
-                  planFilter === "premium" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                Pro
-              </button>
-            </div>
+            <div className="flex items-center justify-between sm:justify-end gap-2.5 shrink-0">
+              {/* Plan Filter Toggle */}
+              <div className="flex items-center gap-1 bg-surface-raised border border-border p-0.5 rounded-lg text-xs">
+                <button
+                  onClick={() => setPlanFilter("all")}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    planFilter === "all" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setPlanFilter("free")}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    planFilter === "free" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  Free
+                </button>
+                <button
+                  onClick={() => setPlanFilter("premium")}
+                  className={`px-2.5 py-1 rounded-md transition-colors ${
+                    planFilter === "premium" ? "bg-accent text-white font-semibold" : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  Pro
+                </button>
+              </div>
 
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-text-tertiary">Sort:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-surface-raised border border-border text-text-primary rounded px-2 py-1 outline-none text-xs font-medium"
-              >
-                <option value="popular">Most Popular</option>
-                <option value="a-z">Name (A-Z)</option>
-              </select>
+              {/* Sort Dropdown */}
+              <div className="flex items-center gap-1.5 text-xs">
+                <span className="text-text-tertiary hidden xs:inline">Sort:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-surface-raised border border-border text-text-primary rounded-lg px-2.5 py-1.5 outline-none text-xs font-medium"
+                >
+                  <option value="popular">Popular</option>
+                  <option value="a-z">A - Z</option>
+                </select>
+              </div>
             </div>
           </div>
 

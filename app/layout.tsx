@@ -25,6 +25,8 @@ const mono = JetBrains_Mono({
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#090a0f",
 };
 
 export const metadata: Metadata = {
@@ -55,11 +57,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${inter.variable} ${mono.variable}`}>
-      <body className="bg-background text-text-primary min-h-screen flex flex-col font-sans antialiased selection:bg-accent selection:text-white">
+      <body className="bg-background text-text-primary min-h-screen flex flex-col font-sans antialiased selection:bg-accent selection:text-white overflow-x-hidden">
         <LanguageProvider>
           <AuthProvider>
             <Header />
-            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12">
+            <main className="flex-1 w-full max-w-7xl mx-auto px-3.5 sm:px-6 pt-4 sm:pt-6 pb-12">
               {children}
             </main>
             <Footer />

@@ -82,7 +82,7 @@ export const GSTCalculatorView: React.FC<GSTCalculatorViewProps> = ({ tool }) =>
           </div>
         </div>
 
-        <div className="lg:col-span-7 flex flex-col gap-6 sticky top-20">
+        <div className="lg:col-span-7 flex flex-col gap-6 lg:sticky lg:top-24">
           <ResultDisplay
             primaryMetric={{
               label: calcType === "add" ? "Total Gross Amount (with GST)" : "Original Net Amount (before GST)",
