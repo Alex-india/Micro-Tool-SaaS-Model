@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SITE_NAME, SITE_TAGLINE, SITE_DESCRIPTION } from "@/lib/constants";
 import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 
 const inter = Inter({
@@ -55,14 +56,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${inter.variable} ${mono.variable}`}>
       <body className="bg-background text-text-primary min-h-screen flex flex-col font-sans antialiased selection:bg-accent selection:text-white">
-        <AuthProvider>
-          <Header />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12">
-            {children}
-          </main>
-          <Footer />
-          <AuthModal />
-        </AuthProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <Header />
+            <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6 pb-12">
+              {children}
+            </main>
+            <Footer />
+            <AuthModal />
+            <div id="google_translate_element" style={{ display: "none" }} />
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

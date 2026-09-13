@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { SITE_NAME, SITE_TAGLINE, CATEGORIES, ALL_TOOLS } from "@/lib/constants";
-import { Shield, Zap, Lock, LayoutGrid } from "lucide-react";
+import { Shield, Zap, Lock, LayoutGrid, Globe } from "lucide-react";
+import { LanguageSelector } from "@/components/layout/LanguageSelector";
 
 export const Footer: React.FC = () => {
   return (
@@ -30,6 +31,11 @@ export const Footer: React.FC = () => {
               <span className="flex items-center gap-1">
                 <Lock className="w-3.5 h-3.5 text-blue-500" /> Zero Trackers
               </span>
+            </div>
+
+            {/* Language Selector in Brand Column */}
+            <div className="mt-2 flex items-center gap-2">
+              <LanguageSelector variant="footer" />
             </div>
           </div>
 

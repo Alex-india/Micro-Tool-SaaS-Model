@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { ToolMeta } from "@/lib/types";
 import { useAuth } from "@/context/AuthContext";
+import { LanguageSelector } from "@/components/layout/LanguageSelector";
 
 const POPULAR_FINANCE = [
   { name: "SIP Calculator", path: "/finance/sip-calculator", desc: "Mutual fund wealth projection" },
@@ -58,17 +59,16 @@ function HeaderNavLinks() {
   const isDeveloperActive = (pathname === "/tools" && categoryParam === "developer") || pathname.startsWith("/developer");
   const isPdfActive = (pathname === "/tools" && (categoryParam === "pdf" || categoryParam === "converters")) || pathname.startsWith("/pdf");
   const isPricingActive = pathname === "/pricing";
-  const isAboutActive = pathname === "/about";
 
   const getLinkClasses = (isActive: boolean) =>
-    `px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 ${
+    `px-3.5 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
       isActive
-        ? "bg-accent/10 text-accent font-bold border border-accent/20 shadow-sm"
+        ? "bg-accent/10 text-accent font-semibold border border-accent/20 shadow-sm"
         : "text-text-secondary hover:text-text-primary hover:bg-surface-raised"
     }`;
 
   return (
-    <nav className="hidden md:flex items-center gap-1.5 text-sm font-semibold">
+    <nav className="hidden md:flex items-center gap-1.5 text-sm font-medium">
       {/* 1. Directory */}
       <Link href="/tools" prefetch={false} className={getLinkClasses(isDirectoryActive)}>
         Directory
@@ -154,14 +154,14 @@ function HeaderNavLinks() {
         )}
       </div>
 
-      {/* 4. PDF & Files */}
+      {/* 4. PDF */}
       <div
         className="relative"
         onMouseEnter={() => setActiveDropdown("pdf")}
         onMouseLeave={() => setActiveDropdown(null)}
       >
         <Link href="/tools?category=pdf" prefetch={false} className={getLinkClasses(isPdfActive)}>
-          <span>PDF & Files</span>
+          <span>PDF</span>
           <ChevronDown className="w-3.5 h-3.5 opacity-60" />
         </Link>
 
@@ -197,11 +197,6 @@ function HeaderNavLinks() {
       {/* 5. Pricing */}
       <Link href="/pricing" prefetch={false} className={getLinkClasses(isPricingActive)}>
         Pricing
-      </Link>
-
-      {/* 6. About */}
-      <Link href="/about" prefetch={false} className={getLinkClasses(isAboutActive)}>
-        About
       </Link>
     </nav>
   );
@@ -266,12 +261,12 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full h-16 glass-panel transition-colors">
-        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between">
+      <header className="sticky top-0 z-40 w-full h-16 sm:h-[68px] glass-panel transition-colors">
+        <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 flex items-center justify-between gap-4">
           {/* Logo & Desktop Navigation */}
-          <div className="flex items-center gap-6 lg:gap-8">
+          <div className="flex items-center gap-6 lg:gap-8 shrink-0">
             <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-              <div className="w-9 h-9 rounded-lg bg-accent text-white flex items-center justify-center font-extrabold text-base shadow-sm transition-transform duration-150 group-hover:scale-105">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-accent text-white flex items-center justify-center font-extrabold shadow-sm transition-transform duration-150 group-hover:scale-105">
                 <LayoutGrid className="w-5 h-5" />
               </div>
               <span className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
@@ -280,21 +275,22 @@ export const Header: React.FC = () => {
             </Link>
 
             {/* Desktop Navigation */}
-            <Suspense fallback={<div className="hidden md:flex gap-4 text-xs text-text-tertiary">Loading...</div>}>
+            <Suspense fallback={<div className="hidden md:flex gap-3 text-sm text-text-tertiary">Loading...</div>}>
               <HeaderNavLinks />
             </Suspense>
           </div>
 
           {/* Right Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 shrink-0">
             {/* Search Trigger Button */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2.5 px-3 py-2 text-xs sm:text-sm font-semibold text-text-secondary bg-surface-raised/90 hover:bg-surface-raised border border-border hover:border-border-hover rounded-lg transition-colors shadow-sm"
+              className="flex items-center gap-2.5 h-9 sm:h-10 px-3 sm:px-3.5 text-xs sm:text-sm font-medium text-text-secondary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-xl transition-colors shadow-sm"
+              title="Search tools (⌘K)"
             >
-              <Search className="w-4 h-4 text-text-tertiary" />
-              <span className="hidden sm:inline">Search tools...</span>
-              <kbd className="hidden sm:inline-block font-mono text-xs font-bold px-1.5 py-0.5 bg-surface border border-border rounded text-text-tertiary">
+              <Search className="w-4 h-4 text-text-tertiary shrink-0" />
+              <span className="hidden lg:inline text-xs sm:text-sm text-text-tertiary">Search tools...</span>
+              <kbd className="hidden sm:inline-flex items-center font-mono text-[11px] font-semibold px-2 py-0.5 bg-surface-raised border border-border rounded text-text-tertiary">
                 ⌘K
               </kbd>
             </button>
@@ -302,29 +298,32 @@ export const Header: React.FC = () => {
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2 text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-lg transition-colors shadow-sm"
+              className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border hover:border-border-hover rounded-xl transition-colors shadow-sm shrink-0"
               title="Toggle theme"
             >
-              {isDark ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-slate-700" />}
+              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
 
+            {/* Language Selector Desktop */}
+            <LanguageSelector variant="header" />
+
             {/* User & Auth CTA Desktop */}
-            <div className="hidden sm:flex items-center gap-2 ml-1">
+            <div className="hidden sm:flex items-center gap-2.5 ml-1">
               {user ? (
                 /* Logged In State */
                 <div className="flex items-center gap-2">
                   <Link href="/dashboard">
-                    <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-raised border border-border hover:border-accent/40 text-xs sm:text-sm font-bold text-text-primary transition-all shadow-sm">
+                    <button className="flex items-center gap-2.5 h-9 sm:h-10 px-3.5 rounded-xl bg-surface-raised border border-border hover:border-accent/40 text-xs sm:text-sm font-bold text-text-primary transition-all shadow-sm">
                       <div className="w-6 h-6 rounded-full bg-accent text-white flex items-center justify-center text-xs font-extrabold">
                         {user.name.charAt(0)}
                       </div>
-                      <span>{user.name}</span>
+                      <span className="max-w-28 truncate">{user.name}</span>
                       {user.plan === "pro" ? (
-                        <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] uppercase font-bold flex items-center gap-1">
-                          <Sparkles className="w-2.5 h-2.5" /> PRO
+                        <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] uppercase font-bold flex items-center gap-0.5">
+                          <Sparkles className="w-3 h-3" /> PRO
                         </span>
                       ) : (
-                        <span className="px-1.5 py-0.2 rounded bg-surface border border-border text-text-tertiary text-[10px] uppercase font-bold">
+                        <span className="px-1.5 py-0.5 rounded bg-surface border border-border text-text-tertiary text-[10px] uppercase font-bold">
                           FREE
                         </span>
                       )}
@@ -333,7 +332,7 @@ export const Header: React.FC = () => {
 
                   <button
                     onClick={logout}
-                    className="p-2 text-text-tertiary hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                    className="w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-text-tertiary hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-colors"
                     title="Sign Out"
                   >
                     <LogOut className="w-4 h-4" />
@@ -342,26 +341,16 @@ export const Header: React.FC = () => {
               ) : (
                 /* Logged Out / Visitor State */
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
+                  <button
                     onClick={() => openAuthModal("login")}
-                    className="font-bold text-text-secondary hover:text-text-primary"
+                    className="h-9 sm:h-10 px-3.5 sm:px-4 text-sm font-semibold text-text-secondary hover:text-text-primary transition-colors"
                   >
                     Log In
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={() => openAuthModal("signup")}
-                    className="font-bold"
-                  >
-                    Sign Up
-                  </Button>
+                  </button>
                   <Link href="/pricing">
-                    <Button variant="primary" size="sm" className="font-bold">
-                      Get Pro
-                    </Button>
+                    <button className="h-9 sm:h-10 px-4 sm:px-5 rounded-xl bg-accent hover:bg-accent-hover text-white text-sm font-bold transition-all shadow-sm hover:shadow-accent/20 flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5" /> Get Pro
+                    </button>
                   </Link>
                 </div>
               )}
@@ -370,7 +359,8 @@ export const Header: React.FC = () => {
             {/* Mobile Hamburger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-text-secondary hover:text-text-primary rounded-lg"
+              className="md:hidden w-9 h-9 sm:w-10 sm:h-10 flex items-center justify-center text-text-secondary hover:text-text-primary bg-surface hover:bg-surface-raised border border-border rounded-xl transition-colors"
+              title="Open mobile menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -443,6 +433,12 @@ export const Header: React.FC = () => {
               Dashboard
             </Link>
           </nav>
+          
+          {/* Mobile Language Selector */}
+          <div className="pt-2 border-t border-border">
+            <LanguageSelector variant="mobile" />
+          </div>
+
           <div className="pt-3 border-t border-border">
             <Link href="/pricing" prefetch={false} onClick={() => setMobileMenuOpen(false)}>
               <Button variant="primary" className="w-full" size="sm">

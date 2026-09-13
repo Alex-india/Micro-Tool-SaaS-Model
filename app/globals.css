@@ -150,3 +150,60 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
+/* Seamless Multi-Language Google Translate & Popup Overrides */
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+#goog-gt-tt *,
+.goog-tooltip,
+.goog-tooltip:hover,
+.goog-te-gadget,
+.goog-te-gadget-simple,
+.goog-te-menu-frame,
+.goog-te-menu-value,
+.goog-te-spinner-pos,
+[class*="VIpgJd"],
+[class*="VIpgJd"] *,
+[class*="goog-te-banner"],
+[id*="goog-gt-tt"],
+iframe.goog-te-banner-frame,
+iframe.skiptranslate,
+iframe[id*=":1.container"],
+iframe[id*=":2.container"],
+iframe[id*=":0.container"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  max-height: 0 !important;
+  max-width: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+}
+
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+#google_translate_element {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+
+
