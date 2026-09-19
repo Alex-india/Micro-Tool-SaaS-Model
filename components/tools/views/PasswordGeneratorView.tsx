@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
+import React, { useState, useMemo } from "react";
 import { ToolMeta } from "@/lib/types";
 import { ToolHeader } from "../ToolHeader";
 import { Slider } from "@/components/ui/Slider";
@@ -16,18 +16,13 @@ import {
   Eye,
   EyeOff,
   ShieldCheck,
-  AlertCircle,
-  History,
-  Layers,
-  Sparkles,
-  Download,
   Key,
   Lock,
   FileCheck,
   CheckCircle2,
   XCircle,
-  Server,
-  Zap,
+  Sparkles,
+  Download,
 } from "lucide-react";
 
 export interface PasswordGeneratorViewProps {
@@ -59,16 +54,9 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
   const [includeNumbers, setIncludeNumbers] = useState<boolean>(true);
   const [includeSymbols, setIncludeSymbols] = useState<boolean>(true);
   const [excludeAmbiguous, setExcludeAmbiguous] = useState<boolean>(false);
-  const [excludeCustom, setExcludeCustom] = useState<string>("");
-  const [isPronounceable, setIsPronounceable] = useState<boolean>(false);
-  const [bulkCount, setBulkCount] = useState<number>(1);
   const [showPassword, setShowPassword] = useState<boolean>(true);
   const [copied, setCopied] = useState<boolean>(false);
-  const [copiedBulk, setCopiedBulk] = useState<boolean>(false);
   const [refreshKey, setRefreshKey] = useState<number>(0);
-
-  // Session Password History (Last 5 generated)
-  const [passwordHistory, setPasswordHistory] = useState<string[]>([]);
 
   // 2. Passphrase States
   const [wordCount, setWordCount] = useState<number>(4);
@@ -88,12 +76,8 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
   const [cleanedUrl, setCleanedUrl] = useState<string>("");
   const [cleanedStatus, setCleanedStatus] = useState<string>("");
 
-  // Server data state
-  const [apiServerPassword, setApiServerPassword] = useState<string>("");
-  const [apiServerBulk, setApiServerBulk] = useState<string[]>([]);
-
-  // Local Client Generator
-  const clientPasswordResult = useMemo(() => {
+  // Standard Password Result
+  const passwordResult = useMemo(() => {
     return generatePassword({
       length,
       includeUppercase,
@@ -101,105 +85,8 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
       includeNumbers,
       includeSymbols,
       excludeAmbiguous,
-      excludeCustom,
-      isPronounceable,
-      count: bulkCount,
     });
-  }, [
-    length,
-    includeUppercase,
-    includeLowercase,
-    includeNumbers,
-    includeSymbols,
-    excludeAmbiguous,
-    excludeCustom,
-    isPronounceable,
-    bulkCount,
-    refreshKey,
-  ]);
-
-  // Sync with Server API on option changes or refresh
-  useEffect(() => {
-    if (isPassphrase || isStrengthChecker || isSecureRandom || isMetadataCleaner) return;
-
-    let isMounted = true;
-    fetch("/api/privacy/password-generator", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "password",
-        length,
-        includeUppercase,
-        includeLowercase,
-        includeNumbers,
-        includeSymbols,
-        excludeAmbiguous,
-        excludeCustom,
-        count: bulkCount,
-      }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (isMounted && json.success) {
-          setApiServerPassword(json.data.password);
-          setApiServerBulk(json.data.passwordsList);
-        }
-      })
-      .catch(() => {
-        // silently fallback to client
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, [
-    length,
-    includeUppercase,
-    includeLowercase,
-    includeNumbers,
-    includeSymbols,
-    excludeAmbiguous,
-    excludeCustom,
-    bulkCount,
-    refreshKey,
-    isPassphrase,
-    isStrengthChecker,
-    isSecureRandom,
-    isMetadataCleaner,
-  ]);
-
-  const activePassword = apiServerPassword || clientPasswordResult.password;
-  const activeBulkList = apiServerBulk.length > 0 ? apiServerBulk : clientPasswordResult.passwordsList;
-
-  // Track password history
-  useEffect(() => {
-    if (activePassword) {
-      setPasswordHistory((prev) => {
-        if (prev[0] === activePassword) return prev;
-        return [activePassword, ...prev.filter((p) => p !== activePassword)].slice(0, 5);
-      });
-    }
-  }, [activePassword]);
-
-  // Keyboard shortcut (Ctrl + R or Space to regenerate password)
-  const handleRegenerate = useCallback(() => {
-    setRefreshKey((k) => k + 1);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
-      if (tag === "input" || tag === "textarea" || tag === "select") return;
-
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "r") {
-        e.preventDefault();
-        handleRegenerate();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleRegenerate]);
+  }, [length, includeUppercase, includeLowercase, includeNumbers, includeSymbols, excludeAmbiguous, refreshKey]);
 
   // Passphrase Result
   const passphraseResult = useMemo(() => {
@@ -321,6 +208,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
       const str = String.fromCharCode(...buffer);
       return btoa(str).replace(/[^a-zA-Z0-9]/g, "").slice(0, randomLength);
     } else {
+      // Alphanumeric
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       return Array.from(buffer)
         .map((b) => chars[b % chars.length])
@@ -329,17 +217,9 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
   }, [randomFormat, randomLength, refreshKey]);
 
   const handleCopyText = (text: string) => {
-    if (!text) return;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const handleCopyAllBulk = () => {
-    if (activeBulkList.length === 0) return;
-    navigator.clipboard.writeText(activeBulkList.join("\n"));
-    setCopiedBulk(true);
-    setTimeout(() => setCopiedBulk(false), 2000);
   };
 
   // Metadata Cleaner handler
@@ -348,6 +228,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
     const file = files[0];
     setUploadedFile(file);
 
+    // If image, draw to canvas without EXIF and export clean blob
     if (file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -372,6 +253,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
       };
       reader.readAsDataURL(file);
     } else {
+      // For generic files, create cleaned blob
       const url = URL.createObjectURL(file);
       setCleanedUrl(url);
       setCleanedStatus(`Sanitized file "${file.name}" with client-side privacy scrubber.`);
@@ -382,39 +264,18 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
     <div className="w-full flex flex-col gap-6">
       <ToolHeader tool={tool} />
 
-      {/* Backend API Connection Status Banner */}
-      <div className="flex items-center justify-between px-4 py-2 rounded-xl bg-surface border border-border text-xs text-text-secondary">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-semibold text-text-primary flex items-center gap-1.5">
-            <Server className="w-3.5 h-3.5 text-accent" />
-            Backend API Connected:
-          </span>
-          <span className="font-mono text-emerald-400">
-            {isSecureRandom
-              ? "/api/privacy/secure-random"
-              : isMetadataCleaner
-              ? "/api/privacy/metadata-remover"
-              : "/api/privacy/password-generator"}
-          </span>
-        </div>
-        <span className="text-[11px] text-text-tertiary hidden sm:inline">
-          CSPRNG Cryptographic Security Active
-        </span>
-      </div>
-
       <div className="max-w-3xl mx-auto w-full flex flex-col gap-6">
         {/* 1. PASSPHRASE GENERATOR */}
         {isPassphrase ? (
           <>
-            <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-4">
-              <div className="flex items-center justify-between gap-4 bg-surface-raised border border-border rounded-xl p-4 font-mono text-lg sm:text-xl text-text-primary tracking-wide">
+            <div className="bg-surface-raised border border-border rounded-xl p-6 shadow-card flex flex-col gap-4">
+              <div className="flex items-center justify-between gap-4 bg-surface border border-border rounded-lg p-4 font-mono text-lg sm:text-xl text-text-primary tracking-wide">
                 <span className="truncate">{passphraseResult.phrase}</span>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
-                    onClick={handleRegenerate}
-                    className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                    title="Regenerate (Ctrl + R)"
+                    onClick={() => setRefreshKey((k) => k + 1)}
+                    className="p-2 text-accent hover:bg-accent/10 rounded transition-colors"
+                    title="Regenerate"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
@@ -440,7 +301,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
               </div>
             </div>
 
-            <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+            <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-6">
               <Slider
                 label="Number of Words"
                 min={3}
@@ -490,7 +351,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleRegenerate}
+                onClick={() => setRefreshKey((k) => k + 1)}
                 leftIcon={<RefreshCw className="w-4 h-4" />}
               >
                 Generate New Passphrase
@@ -499,7 +360,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
           </>
         ) : isStrengthChecker ? (
           /* 2. PASSWORD STRENGTH CHECKER */
-          <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+          <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-6">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-semibold text-text-primary">Enter Password to Test</label>
               <div className="relative">
@@ -508,12 +369,12 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                   value={testPassword}
                   onChange={(e) => setTestPassword(e.target.value)}
                   placeholder="Type or paste any password..."
-                  className="w-full bg-surface-raised border border-border rounded-xl p-4 pr-12 font-mono text-base text-text-primary outline-none focus:border-accent"
+                  className="w-full bg-surface-raised border border-border rounded-lg p-3.5 pr-12 font-mono text-base text-text-primary outline-none focus:border-accent"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-4 text-text-tertiary hover:text-text-primary"
+                  className="absolute right-3 top-3.5 text-text-tertiary hover:text-text-primary"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -538,17 +399,17 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
 
             {/* Metrics */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <div className="bg-surface-raised border border-border p-3.5 rounded-xl text-center">
-                <span className="text-[11px] text-text-tertiary block font-medium">Crack Time</span>
+              <div className="bg-surface-raised border border-border p-3.5 rounded-lg text-center">
+                <span className="text-[11px] text-text-tertiary block">Crack Time</span>
                 <span className="text-sm font-bold text-accent mt-0.5 block">{strengthEvaluation.crackTime}</span>
               </div>
-              <div className="bg-surface-raised border border-border p-3.5 rounded-xl text-center">
-                <span className="text-[11px] text-text-tertiary block font-medium">Entropy</span>
+              <div className="bg-surface-raised border border-border p-3.5 rounded-lg text-center">
+                <span className="text-[11px] text-text-tertiary block">Entropy</span>
                 <span className="text-sm font-bold text-text-primary mt-0.5 block">{strengthEvaluation.entropy} bits</span>
               </div>
-              <div className="bg-surface-raised border border-border p-3.5 rounded-xl text-center col-span-2 sm:col-span-1">
-                <span className="text-[11px] text-text-tertiary block font-medium">Length</span>
-                <span className="text-sm font-bold text-text-primary mt-0.5 block">{testPassword.length} chars</span>
+              <div className="bg-surface-raised border border-border p-3.5 rounded-lg text-center col-span-2 sm:col-span-1">
+                <span className="text-[11px] text-text-tertiary block">Length</span>
+                <span className="text-sm font-bold text-text-primary mt-0.5 block">{testPassword.length} characters</span>
               </div>
             </div>
 
@@ -622,14 +483,14 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
         ) : isSecureRandom ? (
           /* 3. SECURE RANDOM GENERATOR */
           <>
-            <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-4">
-              <div className="flex items-center justify-between gap-4 bg-surface-raised border border-border rounded-xl p-4 font-mono text-sm sm:text-base text-text-primary break-all">
+            <div className="bg-surface-raised border border-border rounded-xl p-6 shadow-card flex flex-col gap-4">
+              <div className="flex items-center justify-between gap-4 bg-surface border border-border rounded-lg p-4 font-mono text-sm sm:text-base text-text-primary break-all">
                 <span>{randomResult}</span>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
-                    onClick={handleRegenerate}
-                    className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                    title="Regenerate (Ctrl + R)"
+                    onClick={() => setRefreshKey((k) => k + 1)}
+                    className="p-2 text-accent hover:bg-accent/10 rounded transition-colors"
+                    title="Regenerate"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
@@ -644,11 +505,11 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                 </div>
               </div>
               <span className="text-xs text-text-tertiary">
-                Generated using cryptographically secure CSPRNG (<code className="text-accent">crypto.getRandomValues</code>)
+                Generated using cryptographically secure Web Crypto CSPRNG (<code className="text-accent">crypto.getRandomValues</code>)
               </span>
             </div>
 
-            <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+            <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-6">
               <Slider
                 label="String Length"
                 min={8}
@@ -667,9 +528,9 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                       key={fmt}
                       type="button"
                       onClick={() => setRandomFormat(fmt)}
-                      className={`p-3 rounded-xl border text-center capitalize transition-all ${
+                      className={`p-2.5 rounded-lg border text-center capitalize transition-all ${
                         randomFormat === fmt
-                          ? "bg-accent/10 border-accent text-accent font-bold shadow-md shadow-accent/10"
+                          ? "bg-accent/10 border-accent text-accent font-bold"
                           : "bg-surface-raised border-border text-text-secondary hover:text-text-primary"
                       }`}
                     >
@@ -682,16 +543,16 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleRegenerate}
+                onClick={() => setRefreshKey((k) => k + 1)}
                 leftIcon={<RefreshCw className="w-4 h-4" />}
               >
-                Generate Cryptographic Token
+                Generate Cryptographic String
               </Button>
             </div>
           </>
         ) : isMetadataCleaner ? (
           /* 4. METADATA & EXIF CLEANER */
-          <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+          <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-6">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider border-b border-border pb-2.5">
               Upload File to Strip Hidden Metadata
             </h3>
@@ -703,7 +564,7 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
             />
 
             {uploadedFile && (
-              <div className="p-4 rounded-xl bg-surface-raised border border-border flex flex-col gap-3">
+              <div className="p-4 rounded-lg bg-surface-raised border border-border flex flex-col gap-3">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-semibold text-text-primary">{uploadedFile.name}</span>
                   <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
@@ -726,43 +587,32 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
             )}
           </div>
         ) : (
-          /* 5. STANDARD PASSWORD GENERATOR WITH EXTENDED FUNCTIONALITY */
+          /* 5. STANDARD PASSWORD GENERATOR */
           <>
             {/* Output Box Display */}
-            <div className="bg-surface border border-accent/40 rounded-2xl p-6 shadow-2xl flex flex-col gap-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-
-              <div className="flex items-center justify-between gap-4 bg-surface-raised border border-border rounded-xl p-4 font-mono text-xl sm:text-2xl text-text-primary tracking-wider">
-                <span className="truncate select-all">
-                  {clientPasswordResult.isValid ? (
-                    showPassword ? activePassword : "•".repeat(length)
-                  ) : (
-                    <span className="text-rose-400 text-sm font-sans font-normal flex items-center gap-1.5">
-                      <AlertCircle className="w-4 h-4" />
-                      {clientPasswordResult.errorMessage}
-                    </span>
-                  )}
+            <div className="bg-surface-raised border border-border rounded-xl p-6 shadow-card flex flex-col gap-4">
+              <div className="flex items-center justify-between gap-4 bg-surface border border-border rounded-lg p-4 font-mono text-xl sm:text-2xl text-text-primary tracking-wider">
+                <span className="truncate">
+                  {showPassword ? passwordResult.password : "•".repeat(length)}
                 </span>
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => setShowPassword(!showPassword)}
-                    className="p-2 text-text-tertiary hover:text-text-primary rounded-lg hover:bg-surface transition-colors"
-                    title={showPassword ? "Hide password" : "Show password"}
+                    className="p-2 text-text-tertiary hover:text-text-primary rounded hover:bg-surface-raised transition-colors"
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                   </button>
                   <button
-                    onClick={handleRegenerate}
-                    className="p-2 text-accent hover:bg-accent/10 rounded-lg transition-colors"
-                    title="Regenerate (Ctrl + R)"
+                    onClick={() => setRefreshKey((k) => k + 1)}
+                    className="p-2 text-accent hover:bg-accent/10 rounded transition-colors"
+                    title="Regenerate"
                   >
                     <RefreshCw className="w-5 h-5" />
                   </button>
                   <Button
                     variant="primary"
                     size="sm"
-                    disabled={!clientPasswordResult.isValid}
-                    onClick={() => handleCopyText(activePassword)}
+                    onClick={() => handleCopyText(passwordResult.password)}
                     leftIcon={copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                   >
                     {copied ? "Copied" : "Copy"}
@@ -770,65 +620,20 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                 </div>
               </div>
 
-              {/* Strength Meter & Quick Tips */}
-              {clientPasswordResult.isValid ? (
-                <div className="flex items-center justify-between text-xs pt-1">
-                  <span className="text-text-secondary flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                    Strength: <strong className="text-text-primary font-semibold">{clientPasswordResult.strength}</strong> ({clientPasswordResult.entropy} bits)
-                  </span>
-                  <span className="text-text-tertiary">
-                    Est. Crack Time: <strong className="text-accent">{clientPasswordResult.crackTimeText}</strong>
-                  </span>
-                </div>
-              ) : (
-                <div className="text-xs text-rose-400/90 pt-1 flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5" />
-                  {clientPasswordResult.errorMessage}
-                </div>
-              )}
+              {/* Strength Meter */}
+              <div className="flex items-center justify-between text-xs pt-1">
+                <span className="text-text-secondary flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                  Strength: <strong className="text-text-primary font-semibold">{passwordResult.strength}</strong> ({passwordResult.entropy} bits)
+                </span>
+                <span className="text-text-tertiary">
+                  Est. Crack Time: <strong className="text-accent">{passwordResult.crackTimeText}</strong>
+                </span>
+              </div>
             </div>
 
-            {/* Bulk Results List if count > 1 */}
-            {bulkCount > 1 && clientPasswordResult.isValid && (
-              <div className="bg-surface border border-border rounded-2xl p-5 shadow-xl flex flex-col gap-3">
-                <div className="flex items-center justify-between border-b border-border pb-2.5">
-                  <span className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-accent" />
-                    Bulk Generated Passwords ({activeBulkList.length})
-                  </span>
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={handleCopyAllBulk}
-                    leftIcon={copiedBulk ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  >
-                    {copiedBulk ? "Copied All!" : "Copy All"}
-                  </Button>
-                </div>
-
-                <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
-                  {activeBulkList.map((pwd, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center justify-between p-2.5 bg-surface-raised rounded-lg border border-border font-mono text-xs text-text-primary"
-                    >
-                      <span className="truncate pr-2">{showPassword ? pwd : "•".repeat(length)}</span>
-                      <button
-                        onClick={() => handleCopyText(pwd)}
-                        className="text-text-tertiary hover:text-accent p-1 transition-colors"
-                        title="Copy password"
-                      >
-                        <Copy className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
             {/* Configuration Options */}
-            <div className="bg-surface border border-border rounded-2xl p-6 shadow-xl flex flex-col gap-6">
+            <div className="bg-surface border border-border rounded-xl p-6 shadow-card flex flex-col gap-6">
               <Slider
                 label="Password Character Length"
                 min={8}
@@ -839,31 +644,28 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                 onChangeValue={(v) => setLength(v)}
               />
 
-              {/* Character Options Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-medium text-text-primary">
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium text-text-primary">
+                <label className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-surface-raised/50 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={includeUppercase}
-                    disabled={isPronounceable}
                     onChange={(e) => setIncludeUppercase(e.target.checked)}
                     className="w-4 h-4 accent-accent rounded"
                   />
-                  <span className={isPronounceable ? "text-text-tertiary" : ""}>Uppercase Letters (A-Z)</span>
+                  <span>Uppercase Letters (A-Z)</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
+                <label className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-surface-raised/50 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={includeLowercase}
-                    disabled={isPronounceable}
                     onChange={(e) => setIncludeLowercase(e.target.checked)}
                     className="w-4 h-4 accent-accent rounded"
                   />
-                  <span className={isPronounceable ? "text-text-tertiary" : ""}>Lowercase Letters (a-z)</span>
+                  <span>Lowercase Letters (a-z)</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
+                <label className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-surface-raised/50 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={includeNumbers}
@@ -873,94 +675,31 @@ export const PasswordGeneratorView: React.FC<PasswordGeneratorViewProps> = ({ to
                   <span>Numbers (0-9)</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
+                <label className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-surface-raised/50 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={includeSymbols}
-                    disabled={isPronounceable}
                     onChange={(e) => setIncludeSymbols(e.target.checked)}
                     className="w-4 h-4 accent-accent rounded"
                   />
-                  <span className={isPronounceable ? "text-text-tertiary" : ""}>Symbols (!@#$%^&*)</span>
+                  <span>Special Symbols (!@#$%)</span>
                 </label>
 
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
+                <label className="flex items-center gap-2.5 p-3 rounded-lg border border-border bg-surface-raised/50 cursor-pointer select-none sm:col-span-2">
                   <input
                     type="checkbox"
                     checked={excludeAmbiguous}
                     onChange={(e) => setExcludeAmbiguous(e.target.checked)}
                     className="w-4 h-4 accent-accent rounded"
                   />
-                  <span>Exclude Ambiguous (Il1O0)</span>
-                </label>
-
-                <label className="flex items-center gap-2.5 p-3 rounded-xl border border-border bg-surface-raised/50 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={isPronounceable}
-                    onChange={(e) => setIsPronounceable(e.target.checked)}
-                    className="w-4 h-4 accent-accent rounded"
-                  />
-                  <span>Pronounceable Syllables</span>
+                  <span>Exclude Ambiguous Characters (O, 0, l, 1, I)</span>
                 </label>
               </div>
-
-              {/* Bulk Generation Quantity Selector */}
-              <div className="flex flex-col gap-2 pt-2 border-t border-border">
-                <label className="text-xs font-bold text-text-secondary uppercase tracking-wider">
-                  Bulk Password Quantity
-                </label>
-                <div className="grid grid-cols-5 gap-2">
-                  {[1, 5, 10, 25, 50].map((count) => (
-                    <button
-                      key={count}
-                      type="button"
-                      onClick={() => setBulkCount(count)}
-                      className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
-                        bulkCount === count
-                          ? "bg-accent text-white border-accent shadow-md shadow-accent/20"
-                          : "bg-surface-raised border-border text-text-secondary hover:text-text-primary"
-                      }`}
-                    >
-                      {count} {count === 1 ? "Password" : "Passwords"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Password History */}
-              {passwordHistory.length > 1 && (
-                <div className="flex flex-col gap-2 pt-2 border-t border-border">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
-                      <History className="w-3.5 h-3.5 text-accent" /> Recent Passwords
-                    </span>
-                    <button
-                      onClick={() => setPasswordHistory([])}
-                      className="text-text-tertiary hover:text-rose-400"
-                    >
-                      Clear History
-                    </button>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {passwordHistory.slice(1).map((hist, i) => (
-                      <button
-                        key={i}
-                        onClick={() => handleCopyText(hist)}
-                        className="px-2.5 py-1 text-xs font-mono bg-surface-raised hover:bg-surface border border-border rounded-lg text-text-secondary hover:text-text-primary flex items-center gap-1"
-                      >
-                        <span className="truncate max-w-[120px]">{hist}</span>
-                        <Copy className="w-3 h-3 text-text-tertiary" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               <Button
                 variant="primary"
                 size="lg"
-                onClick={handleRegenerate}
+                onClick={() => setRefreshKey((k) => k + 1)}
                 leftIcon={<RefreshCw className="w-4 h-4" />}
               >
                 Generate New Password

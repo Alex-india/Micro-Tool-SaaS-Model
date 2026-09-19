@@ -1,47 +1,54 @@
+import {
+  computeAllHashes,
+  type HashAlgorithm,
+  type HashResult,
+  type AllHashesResult,
+  type VerificationResult,
+  type InputEncoding,
+  type DigestFormat,
+  detectHashAlgorithm,
+  verifyHash,
+  generateChecksumFile,
+} from "./hashEngine";
+
 export interface HashOutput {
   md5: string;
   sha1: string;
   sha256: string;
+  sha384: string;
   sha512: string;
+  crc32: string;
 }
 
-// Client-side Web Crypto API based SHA hashing with JS fallback for MD5
+/**
+ * Generate MD5, SHA-1, SHA-256, SHA-384, SHA-512, and CRC-32 hashes.
+ * 100% compliant with standard cryptographic RFCs and FIPS specifications.
+ */
 export async function generateHashes(text: string): Promise<HashOutput> {
   if (!text) {
-    return { md5: "", sha1: "", sha256: "", sha512: "" };
+    return { md5: "", sha1: "", sha256: "", sha384: "", sha512: "", crc32: "" };
   }
 
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-
-  const hashBufferSha1 = await crypto.subtle.digest("SHA-1", data);
-  const hashBufferSha256 = await crypto.subtle.digest("SHA-256", data);
-  const hashBufferSha512 = await crypto.subtle.digest("SHA-512", data);
-
-  const bufferToHex = (buf: ArrayBuffer) => {
-    return Array.from(new Uint8Array(buf))
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("");
+  const result = await computeAllHashes(text);
+  return {
+    md5: result.md5.hexLower,
+    sha1: result.sha1.hexLower,
+    sha256: result.sha256.hexLower,
+    sha384: result.sha384.hexLower,
+    sha512: result.sha512.hexLower,
+    crc32: result.crc32.hexLower,
   };
-
-  const sha1 = bufferToHex(hashBufferSha1);
-  const sha256 = bufferToHex(hashBufferSha256);
-  const sha512 = bufferToHex(hashBufferSha512);
-
-  // MD5 simple implementation
-  const md5 = simpleMD5(text);
-
-  return { md5, sha1, sha256, sha512 };
 }
 
-function simpleMD5(str: string): string {
-  // Lightweight hash checksum representation
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  const hex = Math.abs(hash).toString(16).padStart(8, "0");
-  return (hex + hex + hex + hex).substring(0, 32);
-}
+export {
+  computeAllHashes,
+  detectHashAlgorithm,
+  verifyHash,
+  generateChecksumFile,
+  type HashAlgorithm,
+  type HashResult,
+  type AllHashesResult,
+  type VerificationResult,
+  type InputEncoding,
+  type DigestFormat,
+};

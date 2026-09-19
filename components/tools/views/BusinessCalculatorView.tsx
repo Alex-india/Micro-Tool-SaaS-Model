@@ -8,8 +8,6 @@ import { ResultDisplay } from "../ResultDisplay";
 import { SEOContent } from "../SEOContent";
 import { RelatedTools } from "../RelatedTools";
 import { formatCurrency } from "@/lib/utils";
-import { ChartPanel } from "../ChartPanel";
-import { TableDisplay } from "../TableDisplay";
 import { DollarSign, TrendingUp, AlertTriangle, CheckCircle2, Briefcase, BarChart3, Users, Package } from "lucide-react";
 
 export interface BusinessCalculatorViewProps {
@@ -88,20 +86,7 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
     const profit = sell - cost;
     const margin = sell > 0 ? (profit / sell) * 100 : 0;
     const markup = cost > 0 ? (profit / cost) * 100 : 0;
-
-    const pricingScenarios = [0, 5, 10, 15, 20, 25].map((pct) => {
-      const scenarioPrice = sell > 0 ? sell * (1 + pct / 100) : (cost > 0 ? cost * (1 + (pct || 20) / 100) : 0);
-      const scenarioProfit = scenarioPrice - cost;
-      const scenarioMargin = scenarioPrice > 0 ? (scenarioProfit / scenarioPrice) * 100 : 0;
-      return {
-        scenario: pct === 0 ? "Current Price" : `+${pct}% Price Increase`,
-        price: formatCurrency(scenarioPrice),
-        unitProfit: formatCurrency(scenarioProfit),
-        margin: `${scenarioMargin.toFixed(1)}%`,
-      };
-    });
-
-    return { profit, margin: margin.toFixed(2), markup: markup.toFixed(2), pricingScenarios };
+    return { profit, margin: margin.toFixed(2), markup: markup.toFixed(2) };
   }, [costPrice, sellingPrice]);
 
   const markupResult = useMemo(() => {
@@ -171,29 +156,11 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
     const numFixed = parseFloat(fixedCosts) || 0;
     const numSell = parseFloat(unitSellingPrice) || 0;
     const numVar = parseFloat(unitVariableCost) || 0;
-    const unitMargin = numSell - numVar;
-    const isBreakEvenPossible = unitMargin > 0 && numSell > 0;
-    const unitsNeeded = isBreakEvenPossible ? Math.ceil(numFixed / unitMargin) : 0;
-    const revenueNeeded = isBreakEvenPossible ? unitsNeeded * numSell : 0;
-    const cmRatio = numSell > 0 && unitMargin > 0 ? ((unitMargin / numSell) * 100).toFixed(1) : "0";
-
-    const sensitivityData = isBreakEvenPossible && unitsNeeded > 0
-      ? [0.5, 0.75, 1.0, 1.25, 1.5, 2.0].map((multiplier) => {
-          const units = Math.round(unitsNeeded * multiplier);
-          const rev = units * numSell;
-          const totalCost = numFixed + units * numVar;
-          const profit = rev - totalCost;
-          return {
-            level: `${Math.round(multiplier * 100)}% of BEP`,
-            units: `${units.toLocaleString()} Units`,
-            revenue: formatCurrency(rev),
-            totalCost: formatCurrency(totalCost),
-            profit: formatCurrency(profit),
-          };
-        })
-      : [];
-
-    return { unitsNeeded, revenueNeeded, unitMargin, cmRatio, isBreakEvenPossible, sensitivityData };
+    const unitMargin = Math.max(1, numSell - numVar);
+    const unitsNeeded = Math.ceil(numFixed / unitMargin);
+    const revenueNeeded = unitsNeeded * numSell;
+    const cmRatio = numSell > 0 ? ((unitMargin / numSell) * 100).toFixed(1) : "0";
+    return { unitsNeeded, revenueNeeded, unitMargin, cmRatio };
   }, [fixedCosts, unitSellingPrice, unitVariableCost]);
 
   const roasResult = useMemo(() => {
@@ -212,22 +179,7 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
     const roi = numInit > 0 ? (gain / numInit) * 100 : 0;
     const years = Math.max(1, investmentYears || 1);
     const cagr = numInit > 0 && numFinal > 0 ? (Math.pow(numFinal / numInit, 1 / years) - 1) * 100 : 0;
-
-    const yearlyBreakdown = [];
-    if (numInit > 0 && numFinal > 0) {
-      const annualRate = cagr / 100;
-      for (let y = 1; y <= years; y++) {
-        const valAtY = numInit * Math.pow(1 + annualRate, y);
-        yearlyBreakdown.push({
-          year: `Yr ${y}`,
-          investedAmount: Math.round(numInit),
-          gain: Math.round(Math.max(0, valAtY - numInit)),
-          totalValue: Math.round(valAtY),
-        });
-      }
-    }
-
-    return { roi: roi.toFixed(2), cagr: cagr.toFixed(2), gain, years, yearlyBreakdown };
+    return { roi: roi.toFixed(2), cagr: cagr.toFixed(2), gain, years };
   }, [initialInvestment, finalValue, investmentYears]);
 
   const mrrResult = useMemo(() => {
@@ -579,7 +531,7 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
         </div>
 
         {/* Right Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-6 lg:sticky lg:top-24">
+        <div className="lg:col-span-6 flex flex-col gap-6 sticky top-20">
           {isCAC ? (
             <ResultDisplay
               primaryMetric={{
@@ -607,41 +559,18 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
               ]}
             />
           ) : isBreakEven ? (
-            <>
-              <ResultDisplay
-                primaryMetric={{
-                  label: "Break-Even Units",
-                  value: breakEvenResult.isBreakEvenPossible ? `${breakEvenResult.unitsNeeded.toLocaleString()} Units` : "N/A (Loss per Unit)",
-                }}
-                secondaryMetrics={[
-                  { label: "Break-Even Revenue", value: formatCurrency(breakEvenResult.revenueNeeded) },
-                  { label: "Unit Contribution Margin", value: formatCurrency(breakEvenResult.unitMargin) },
-                  { label: "Contribution Margin Ratio", value: `${breakEvenResult.cmRatio}%` },
-                  { label: "Fixed Monthly Costs", value: formatCurrency(parseFloat(fixedCosts) || 0) },
-                ]}
-              />
-
-              {!breakEvenResult.isBreakEvenPossible && parseFloat(unitSellingPrice) > 0 && (
-                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 flex items-center gap-3 text-xs text-rose-400">
-                  <AlertTriangle className="w-5 h-5 shrink-0" />
-                  <span>Selling price must exceed variable cost to cover fixed costs and reach break-even.</span>
-                </div>
-              )}
-
-              {breakEvenResult.sensitivityData.length > 0 && (
-                <TableDisplay
-                  title="Break-Even Production Volume & Profit/Loss"
-                  columns={[
-                    { key: "level", label: "Production Level", align: "left" as const },
-                    { key: "units", label: "Volume", align: "center" as const },
-                    { key: "revenue", label: "Total Revenue", align: "right" as const },
-                    { key: "totalCost", label: "Total Cost", align: "right" as const },
-                    { key: "profit", label: "Net Profit / (Loss)", align: "right" as const },
-                  ]}
-                  data={breakEvenResult.sensitivityData}
-                />
-              )}
-            </>
+            <ResultDisplay
+              primaryMetric={{
+                label: "Break-Even Units",
+                value: `${breakEvenResult.unitsNeeded.toLocaleString()} Units`,
+              }}
+              secondaryMetrics={[
+                { label: "Break-Even Revenue", value: formatCurrency(breakEvenResult.revenueNeeded) },
+                { label: "Unit Contribution Margin", value: formatCurrency(breakEvenResult.unitMargin) },
+                { label: "Contribution Margin Ratio", value: `${breakEvenResult.cmRatio}%` },
+                { label: "Fixed Monthly Costs", value: formatCurrency(parseFloat(fixedCosts) || 0) },
+              ]}
+            />
           ) : isROAS ? (
             <ResultDisplay
               primaryMetric={{
@@ -656,46 +585,18 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
               ]}
             />
           ) : isROI ? (
-            <>
-              <ResultDisplay
-                primaryMetric={{
-                  label: "Total Return on Investment",
-                  value: `${roiResult.roi}%`,
-                }}
-                secondaryMetrics={[
-                  { label: "Net Capital Gain", value: formatCurrency(roiResult.gain) },
-                  { label: "Annualized Return (CAGR)", value: `${roiResult.cagr}% / yr` },
-                  { label: "Initial Investment", value: formatCurrency(parseFloat(initialInvestment) || 0) },
-                  { label: "Final Portfolio Value", value: formatCurrency(parseFloat(finalValue) || 0) },
-                ]}
-              />
-
-              {roiResult.yearlyBreakdown.length > 0 && (
-                <>
-                  <ChartPanel
-                    title="ROI Wealth Growth Curve"
-                    type="area"
-                    data={roiResult.yearlyBreakdown}
-                    xKey="year"
-                    series={[
-                      { key: "investedAmount", name: "Initial Principal", color: "#3B82F6" },
-                      { key: "totalValue", name: "Portfolio Value", color: "#10B981" },
-                    ]}
-                  />
-
-                  <TableDisplay
-                    title="Annualized Investment Compounding Table"
-                    columns={[
-                      { key: "year", label: "Year", align: "center" as const },
-                      { key: "investedAmount", label: "Principal (₹)", align: "right" as const, format: (v: number) => formatCurrency(v) },
-                      { key: "gain", label: "Capital Gain (₹)", align: "right" as const, format: (v: number) => formatCurrency(v) },
-                      { key: "totalValue", label: "Total Portfolio (₹)", align: "right" as const, format: (v: number) => formatCurrency(v) },
-                    ]}
-                    data={roiResult.yearlyBreakdown}
-                  />
-                </>
-              )}
-            </>
+            <ResultDisplay
+              primaryMetric={{
+                label: "Total Return on Investment",
+                value: `${roiResult.roi}%`,
+              }}
+              secondaryMetrics={[
+                { label: "Net Capital Gain", value: formatCurrency(roiResult.gain) },
+                { label: "Annualized Return (CAGR)", value: `${roiResult.cagr}% / yr` },
+                { label: "Initial Investment", value: formatCurrency(parseFloat(initialInvestment) || 0) },
+                { label: "Final Portfolio Value", value: formatCurrency(parseFloat(finalValue) || 0) },
+              ]}
+            />
           ) : isMRR ? (
             <ResultDisplay
               primaryMetric={{
@@ -779,33 +680,18 @@ export const BusinessCalculatorView: React.FC<BusinessCalculatorViewProps> = ({ 
               </div>
             </>
           ) : (
-            <>
-              <ResultDisplay
-                primaryMetric={{
-                  label: "Gross Profit Margin",
-                  value: `${marginResult.margin}%`,
-                }}
-                secondaryMetrics={[
-                  { label: "Gross Markup", value: `${marginResult.markup}%` },
-                  { label: "Net Profit per Unit", value: formatCurrency(marginResult.profit) },
-                  { label: "Cost of Goods (COGS)", value: formatCurrency(parseFloat(costPrice) || 0) },
-                  { label: "Selling Price", value: formatCurrency(parseFloat(sellingPrice) || 0) },
-                ]}
-              />
-
-              {marginResult.pricingScenarios.length > 0 && (
-                <TableDisplay
-                  title="Pricing Strategy & Margin Sensitivity Table"
-                  columns={[
-                    { key: "scenario", label: "Pricing Scenario", align: "left" as const },
-                    { key: "price", label: "Selling Price", align: "right" as const },
-                    { key: "unitProfit", label: "Unit Profit", align: "right" as const },
-                    { key: "margin", label: "Gross Margin", align: "right" as const },
-                  ]}
-                  data={marginResult.pricingScenarios}
-                />
-              )}
-            </>
+            <ResultDisplay
+              primaryMetric={{
+                label: "Gross Profit Margin",
+                value: `${marginResult.margin}%`,
+              }}
+              secondaryMetrics={[
+                { label: "Gross Markup", value: `${marginResult.markup}%` },
+                { label: "Net Profit per Unit", value: formatCurrency(marginResult.profit) },
+                { label: "Cost of Goods (COGS)", value: formatCurrency(parseFloat(costPrice) || 0) },
+                { label: "Selling Price", value: formatCurrency(parseFloat(sellingPrice) || 0) },
+              ]}
+            />
           )}
         </div>
       </div>
