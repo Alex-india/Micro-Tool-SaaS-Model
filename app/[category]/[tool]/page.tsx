@@ -54,6 +54,14 @@ const WordCounterView = dynamic(
   () => import("@/components/tools/views/WordCounterView").then((m) => m.WordCounterView),
   { loading: () => <ToolSkeleton /> }
 );
+const CharacterCounterView = dynamic(
+  () => import("@/components/tools/views/CharacterCounterView").then((m) => m.CharacterCounterView),
+  { loading: () => <ToolSkeleton /> }
+);
+const SlugGeneratorView = dynamic(
+  () => import("@/components/tools/views/SlugGeneratorView").then((m) => m.SlugGeneratorView),
+  { loading: () => <ToolSkeleton /> }
+);
 const PasswordGeneratorView = dynamic(
   () => import("@/components/tools/views/PasswordGeneratorView").then((m) => m.PasswordGeneratorView),
   { loading: () => <ToolSkeleton /> }
@@ -231,13 +239,18 @@ export default function ToolPage({ params }: PageProps) {
 
       // 7. Text & Writing
       case "text":
+        if (tool.slug === "character-counter") {
+          return <CharacterCounterView tool={tool} />;
+        }
         if (
           tool.slug === "word-counter" ||
-          tool.slug === "character-counter" ||
           tool.slug === "sentence-counter" ||
           tool.slug === "reading-time-calculator"
         ) {
           return <WordCounterView tool={tool} />;
+        }
+        if (tool.slug === "slug-generator" || tool.slug.includes("slug")) {
+          return <SlugGeneratorView tool={tool} />;
         }
         return <TextStudioView tool={tool} />;
 

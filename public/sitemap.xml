@@ -558,12 +558,7 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://toolverse.app/text/find-and-replace</loc>
-    <lastmod>2026-09-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+
   <url>
     <loc>https://toolverse.app/text/slug-generator</loc>
     <lastmod>2026-09-09</lastmod>

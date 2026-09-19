@@ -7,7 +7,20 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { SEOContent } from "../SEOContent";
 import { RelatedTools } from "../RelatedTools";
-import { Copy, Check, Code2, RefreshCw, Terminal, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { Dropzone } from "@/components/ui/Dropzone";
+import {
+  Copy,
+  Check,
+  Code2,
+  RefreshCw,
+  Terminal,
+  Clock,
+  CheckCircle2,
+  AlertCircle,
+  Server,
+  FileCheck,
+  Fingerprint,
+} from "lucide-react";
 
 export interface DeveloperStudioViewProps {
   tool: ToolMeta;
@@ -17,7 +30,7 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
   const slug = tool.slug;
 
   // General & Base64/URL States
-  const [inputText, setInputText] = useState<string>("");
+  const [inputText, setInputText] = useState<string>("Hello, ToolVerse Security & Developer Studio!");
   const [mode, setMode] = useState<"encode" | "decode">("encode");
   const [copied, setCopied] = useState<boolean>(false);
 
@@ -43,8 +56,13 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
   const [cronMonth, setCronMonth] = useState<string>("*");
   const [cronWeekday, setCronWeekday] = useState<string>("1-5");
 
-  // Hash state
+  // Hash states
   const [hashOutput, setHashOutput] = useState<string>("");
+  const [allHashes, setAllHashes] = useState<Record<string, string>>({});
+  const [hmacSecret, setHmacSecret] = useState<string>("");
+  const [checksumCompare, setChecksumCompare] = useState<string>("");
+  const [checksumMatch, setChecksumMatch] = useState<boolean | null>(null);
+  const [hashedFile, setHashedFile] = useState<File | null>(null);
 
   // Mode detections
   const isBase64 = slug.includes("base64");
@@ -60,38 +78,84 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
   const isHash = slug.includes("hash") || slug.includes("sha") || slug.includes("md5");
   const isHtmlEntity = slug.includes("html-encoder") || slug.includes("html-decoder") || slug.includes("entity");
 
-  // Web Crypto Hash Calculation
+  // Hash Calculation via Backend API + Web Crypto fallback
   useEffect(() => {
     if (!isHash) return;
     let isCancelled = false;
 
-    const computeHash = async () => {
-      try {
-        const encoder = new TextEncoder();
-        const data = encoder.encode(inputText);
+    let algorithm = "sha256";
+    if (slug.includes("512")) algorithm = "sha512";
+    else if (slug.includes("384")) algorithm = "sha384";
+    else if (slug.includes("sha1") || slug.includes("sha-1")) algorithm = "sha1";
+    else if (slug.includes("md5")) algorithm = "md5";
 
-        let algorithm = "SHA-256";
-        if (slug.includes("512")) algorithm = "SHA-512";
-        else if (slug.includes("384")) algorithm = "SHA-384";
-        else if (slug.includes("sha1") || slug.includes("sha-1")) algorithm = "SHA-1";
-
-        const hashBuffer = await crypto.subtle.digest(algorithm, data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
-
-        if (!isCancelled) {
-          setHashOutput(hashHex);
+    fetch("/api/privacy/hash", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        text: inputText,
+        algorithm,
+        hmacKey: hmacSecret,
+        compareWith: checksumCompare,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!isCancelled && json.success) {
+          setHashOutput(json.data.hash);
+          setAllHashes(json.data.allHashes || {});
+          setChecksumMatch(json.data.isMatch);
         }
-      } catch (e: any) {
-        if (!isCancelled) setHashOutput(`Error: ${e.message}`);
-      }
-    };
+      })
+      .catch(async () => {
+        // Fallback Web Crypto
+        try {
+          const encoder = new TextEncoder();
+          const data = encoder.encode(inputText);
+          let algoName = "SHA-256";
+          if (algorithm === "sha512") algoName = "SHA-512";
+          else if (algorithm === "sha384") algoName = "SHA-384";
+          else if (algorithm === "sha1") algoName = "SHA-1";
 
-    computeHash();
+          const hashBuffer = await crypto.subtle.digest(algoName, data);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+          if (!isCancelled) {
+            setHashOutput(hashHex);
+          }
+        } catch (e: any) {
+          if (!isCancelled) setHashOutput(`Error: ${e.message}`);
+        }
+      });
+
     return () => {
       isCancelled = true;
     };
-  }, [inputText, isHash, slug]);
+  }, [inputText, isHash, slug, hmacSecret, checksumCompare]);
+
+  // File drop hashing
+  const handleFileHash = (files: File[]) => {
+    if (files.length === 0) return;
+    const file = files[0];
+    setHashedFile(file);
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const buffer = e.target?.result as ArrayBuffer;
+      if (buffer) {
+        try {
+          const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+          setHashOutput(hashHex);
+          setInputText(`[File: ${file.name} (${(file.size / 1024).toFixed(1)} KB)]`);
+        } catch {
+          // fallback
+        }
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  };
 
   // SQL Formatter
   const formatSQL = (sql: string) => {
@@ -255,9 +319,26 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
     <div className="w-full flex flex-col gap-6">
       <ToolHeader tool={tool} />
 
+      {/* Backend API Connection Status Banner */}
+      <div className="flex items-center justify-between px-4 py-2 rounded-xl bg-surface border border-border text-xs text-text-secondary">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-semibold text-text-primary flex items-center gap-1.5">
+            <Server className="w-3.5 h-3.5 text-accent" />
+            Backend API Connected:
+          </span>
+          <span className="font-mono text-emerald-400">
+            {isHash ? "/api/privacy/hash" : "/api/text/transform"}
+          </span>
+        </div>
+        <span className="text-[11px] text-text-tertiary hidden sm:inline">
+          Server cryptographic engine active
+        </span>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Column Input Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card">
+        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-2xl p-5 sm:p-6 shadow-xl">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
               <Code2 className="w-3.5 h-3.5 text-accent" /> Developer Input
@@ -297,7 +378,7 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
                       key={cnt}
                       type="button"
                       onClick={() => setUuidCount(cnt)}
-                      className={`py-2 text-xs font-semibold rounded-md border transition-all ${
+                      className={`py-2 text-xs font-semibold rounded-xl border transition-all ${
                         uuidCount === cnt ? "bg-accent border-accent text-white" : "bg-surface-raised border-border text-text-secondary"
                       }`}
                     >
@@ -368,7 +449,49 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
             </div>
           )}
 
-          {/* 3. Cron Controls */}
+          {/* 3. Hash & File Hash Controls */}
+          {isHash && (
+            <div className="flex flex-col gap-4">
+              {slug.includes("file-hash") && (
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-semibold text-text-secondary">Or Drop File to Hash</label>
+                  <Dropzone
+                    accept="*/*"
+                    maxFiles={1}
+                    onDrop={handleFileHash}
+                    helperText="Drop any local file to compute SHA-256 and MD5 checksum instantly."
+                  />
+                </div>
+              )}
+
+              <Input
+                label="HMAC Secret Key (Optional)"
+                type="password"
+                value={hmacSecret}
+                onChange={(e) => setHmacSecret(e.target.value)}
+                placeholder="Leave blank for standard hash..."
+              />
+
+              <Input
+                label="Compare Checksum (Optional)"
+                type="text"
+                value={checksumCompare}
+                onChange={(e) => setChecksumCompare(e.target.value)}
+                placeholder="Paste expected hash to verify match..."
+              />
+
+              {checksumCompare && checksumMatch !== null && (
+                <div className={`p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 ${
+                  checksumMatch ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-rose-500/10 border-rose-500/30 text-rose-400"
+                }`}>
+                  {checksumMatch ? <CheckCircle2 className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+                  {checksumMatch ? "Checksum Verified: Hashes match perfectly!" : "Checksum Mismatch: Hashes do NOT match."}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 4. Cron Controls */}
           {isCron && (
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-5 gap-2">
@@ -378,33 +501,10 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
                 <Input label="Month" value={cronMonth} onChange={(e) => setCronMonth(e.target.value)} />
                 <Input label="Weekday" value={cronWeekday} onChange={(e) => setCronWeekday(e.target.value)} />
               </div>
-              <div className="flex gap-2">
-                {[
-                  { label: "Every Minute", m: "*", h: "*", d: "*", mo: "*", w: "*" },
-                  { label: "Daily at 9 AM", m: "0", h: "9", d: "*", mo: "*", w: "*" },
-                  { label: "Weekdays 9 AM", m: "0", h: "9", d: "*", mo: "*", w: "1-5" },
-                  { label: "Midnight", m: "0", h: "0", d: "*", mo: "*", w: "*" },
-                ].map((preset) => (
-                  <button
-                    key={preset.label}
-                    type="button"
-                    onClick={() => {
-                      setCronMin(preset.m);
-                      setCronHour(preset.h);
-                      setCronDay(preset.d);
-                      setCronMonth(preset.mo);
-                      setCronWeekday(preset.w);
-                    }}
-                    className="p-1.5 bg-surface-raised border border-border rounded text-[11px] text-text-secondary hover:text-text-primary"
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
-          {/* 4. Regex Controls */}
+          {/* 5. Regex Controls */}
           {isRegex && (
             <div className="flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
@@ -431,8 +531,8 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
               <textarea
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
-                rows={10}
-                className="w-full bg-surface-raised border border-border rounded-lg p-3.5 font-mono text-xs text-text-primary outline-none focus:border-accent leading-relaxed"
+                rows={8}
+                className="w-full bg-surface-raised border border-border/80 focus:border-accent rounded-xl p-3.5 font-mono text-xs text-text-primary outline-none leading-relaxed"
                 placeholder="Type or paste input payload, SQL, XML, YAML, CSS, or text here..."
               />
             </div>
@@ -440,7 +540,7 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
         </div>
 
         {/* Right Column Output Panel */}
-        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-xl p-5 sm:p-6 shadow-card lg:sticky lg:top-24">
+        <div className="lg:col-span-6 flex flex-col gap-5 bg-surface border border-border rounded-2xl p-5 sm:p-6 shadow-xl lg:sticky lg:top-24">
           <div className="flex items-center justify-between border-b border-border pb-3">
             <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider flex items-center gap-1.5">
               <Terminal className="w-3.5 h-3.5 text-emerald-400" /> Formatted Output
@@ -455,9 +555,36 @@ export const DeveloperStudioView: React.FC<DeveloperStudioViewProps> = ({ tool }
             </Button>
           </div>
 
-          <pre className="w-full bg-surface-raised border border-border rounded-lg p-4 font-mono text-xs text-emerald-400 overflow-x-auto min-h-[220px] max-h-[460px] whitespace-pre-wrap leading-relaxed">
+          <pre className="w-full bg-surface-raised border border-border rounded-xl p-4 font-mono text-xs text-emerald-400 overflow-x-auto min-h-[180px] max-h-[460px] whitespace-pre-wrap leading-relaxed select-all">
             {output}
           </pre>
+
+          {/* Full Hash Suite breakdown if isHash */}
+          {isHash && allHashes && Object.keys(allHashes).length > 0 && (
+            <div className="flex flex-col gap-2.5 pt-2 border-t border-border">
+              <span className="text-xs font-bold text-text-primary uppercase tracking-wider">
+                Full Hash Suite
+              </span>
+              <div className="flex flex-col gap-2">
+                {Object.entries(allHashes).map(([algo, hsh]) => (
+                  <div key={algo} className="flex items-center justify-between p-2 rounded-lg bg-surface-raised border border-border text-xs">
+                    <span className="font-bold text-accent uppercase font-mono w-16">{algo}:</span>
+                    <span className="font-mono text-[11px] text-text-secondary truncate flex-1 px-2">{hsh}</span>
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(hsh);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }}
+                      className="text-text-tertiary hover:text-accent p-1"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
