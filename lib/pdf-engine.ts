@@ -422,6 +422,40 @@ export async function extractTextFromPdf(pdfBytes: ArrayBuffer): Promise<string>
 }
 
 /**
+ * Extracts raw text content from an uploaded .docx ArrayBuffer using JSZip & DOMParser
+ */
+export async function extractTextFromDocxBlob(buffer: ArrayBuffer): Promise<string> {
+  try {
+    const zip = await JSZip.loadAsync(buffer);
+    const docXml = await zip.file("word/document.xml")?.async("string");
+    if (!docXml) return "";
+
+    if (typeof window === "undefined") return "";
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(docXml, "text/xml");
+    const paragraphs = xmlDoc.getElementsByTagName("w:p");
+    let fullText = "";
+
+    for (let i = 0; i < paragraphs.length; i++) {
+      const p = paragraphs[i];
+      const texts = p.getElementsByTagName("w:t");
+      let line = "";
+      for (let j = 0; j < texts.length; j++) {
+        line += texts[j].textContent || "";
+      }
+      if (line.trim()) {
+        fullText += line + "\n\n";
+      }
+    }
+    return fullText.trim();
+  } catch (err) {
+    console.warn("Failed to extract docx text via JSZip:", err);
+    return "";
+  }
+}
+
+
+/**
  * Generates a standard editable .docx document from text using JSZip
  */
 export async function generateDocxFromText(
@@ -657,23 +691,3 @@ function escapeXml(unsafe: string): string {
     }
   });
 }
-
-/**
- * Gets the total number of pages in a PDF document buffer
- */
-export async function getPdfPageCount(pdfBytes: ArrayBuffer): Promise<number> {
-  const pdf = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-  return pdf.getPageCount();
-}
-
-/**
- * Loads a PDF buffer, updates title if provided, and saves clean bytes
- */
-export async function cleanSavePdfDocument(pdfBytes: ArrayBuffer, title?: string): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-  if (title) {
-    pdfDoc.setTitle(title);
-  }
-  return pdfDoc.save();
-}
-
